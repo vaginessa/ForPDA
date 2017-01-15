@@ -17,6 +17,10 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 
+import org.acra.ACRA;
+import org.acra.ReportingInteractionMode;
+import org.acra.annotation.ReportsCrashes;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,9 +33,30 @@ import forpdateam.ru.forpda.client.Client;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
+import static org.acra.ReportField.ANDROID_VERSION;
+import static org.acra.ReportField.APP_VERSION_CODE;
+import static org.acra.ReportField.APP_VERSION_NAME;
+import static org.acra.ReportField.CUSTOM_DATA;
+import static org.acra.ReportField.LOGCAT;
+import static org.acra.ReportField.PHONE_MODEL;
+import static org.acra.ReportField.STACK_TRACE;
+import static org.acra.ReportField.USER_COMMENT;
+
 /**
  * Created by radiationx on 28.07.16.
  */
+//acra
+@ReportsCrashes(
+        mailTo =  "ololosh100500@gmail.com",
+        mode = ReportingInteractionMode.DIALOG,
+        resDialogTheme = R.style.AlertDialog,
+        resDialogIcon = R.drawable.ic_warning_gray_24dp,
+        resDialogTitle = R.string.crash_notif_title,
+        resDialogText = R.string.crash_notif_text,
+        resDialogCommentPrompt = R.string.crash_notif_ticker_text,
+        resDialogOkToast = R.string.ok,
+        customReportContent = { APP_VERSION_NAME, APP_VERSION_CODE, PHONE_MODEL, ANDROID_VERSION, USER_COMMENT, CUSTOM_DATA, STACK_TRACE, LOGCAT }
+)
 public class App extends android.app.Application {
     private static App INSTANCE = new App();
     private SharedPreferences preferences;
@@ -86,6 +111,13 @@ public class App extends android.app.Application {
 
     final String s1 = "Искусственная гравитация в Sci-Fi. Ищем истину";
     final String s2 = "Искусственная гравитация в Sci-Fi — ищем истину";*/
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+
+        // The following line triggers the initialization of ACRA
+        ACRA.init(this);
+    }
 
     @Override
     public void onCreate() {

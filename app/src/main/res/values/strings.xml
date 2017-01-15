@@ -26,4 +26,8 @@
     <string name="profile_item_text_last_online">Последнее посещение</string>
     <string name="profile_item_text_alerts">Предупреждения</string>
     <string name="refresh">Обновить</string>
+    <string name="ok">Ok</string>
+    <string name="crash_notif_title">Приложение остановлено</string>
+    <string name="crash_notif_text">Произоша непредвиденная ошибка, остановившая приложение</string>
+    <string name="crash_notif_ticker_text">Помогите нам исправить её, добавив свой комментарий в поле ввода.</string>
 </resources>

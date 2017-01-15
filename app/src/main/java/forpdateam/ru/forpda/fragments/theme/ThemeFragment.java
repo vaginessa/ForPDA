@@ -23,6 +23,7 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
@@ -281,7 +282,7 @@ public abstract class ThemeFragment extends TabFragment {
             action = REFRESH_ACTION;
             loadData();
             return false;
-        })/*.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS)*/;
+        }).setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS);
         if (pageData != null) {
             menu.add("Ссылка").setOnMenuItemClickListener(menuItem -> {
                 Utils.copyToClipBoard(getTabUrl());

@@ -91,4 +91,6 @@
         <item name="colorControlNormal">@color/gray</item>
         <item name="colorControlActivated">@color/black</item>
     </style>
+
+    <style name="AlertDialog">Theme.AppCompat</style>
 </resources>
