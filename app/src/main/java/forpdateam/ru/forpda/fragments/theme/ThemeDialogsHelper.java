@@ -21,74 +21,84 @@ import forpdateam.ru.forpda.utils.IntentHandler;
  * Created by radiationx on 01.11.16.
  */
 
-public class ThemeDialogsHelper {
-    private static AlertDialogMenu<ThemePost> userMenu, reputationMenu, postMenu;
+class ThemeDialogsHelper {
+    private static AlertDialogMenu<ThemeFragment, ThemePost> userMenu, reputationMenu, postMenu;
+    private static AlertDialogMenu<ThemeFragment, ThemePost> showedUserMenu, showedReputationMenu, showedPostMenu;
 
-    public static void showUserMenu(ThemeFragmentWeb theme, ThemePost post) {
+    static void showUserMenu(ThemeFragment theme, ThemePost post) {
         if (userMenu == null) {
             userMenu = new AlertDialogMenu<>();
-            userMenu.addItem("Профиль", data -> IntentHandler.handle("http://4pda.ru/forum/index.php?showuser=" + data.getUserId()));
-            if (Api.Auth().getState())
-                userMenu.addItem("Личные сообщения QMS", data -> IntentHandler.handle("http://4pda.ru/forum/index.php?act=qms&mid=" + data.getUserId()));
-            userMenu.addItem("Темы пользователя", data -> Toast.makeText(theme.getContext(), "Не умею", Toast.LENGTH_SHORT).show());
-            userMenu.addItem("Сообщения в этой теме", data -> Toast.makeText(theme.getContext(), "Не умею", Toast.LENGTH_SHORT).show());
-            userMenu.addItem("Сообщения пользователя", data -> Toast.makeText(theme.getContext(), "Не умею", Toast.LENGTH_SHORT).show());
+            showedUserMenu = new AlertDialogMenu<>();
+            userMenu.addItem("Профиль", (context, data) -> IntentHandler.handle("http://4pda.ru/forum/index.php?showuser=" + data.getUserId()));
+            userMenu.addItem("Личные сообщения QMS", (context, data) -> IntentHandler.handle("http://4pda.ru/forum/index.php?act=qms&mid=" + data.getUserId()));
+            userMenu.addItem("Темы пользователя", (context, data) -> Toast.makeText(context.getContext(), "Не умею", Toast.LENGTH_SHORT).show());
+            userMenu.addItem("Сообщения в этой теме", (context, data) -> Toast.makeText(context.getContext(), "Не умею", Toast.LENGTH_SHORT).show());
+            userMenu.addItem("Сообщения пользователя", (context, data) -> Toast.makeText(context.getContext(), "Не умею", Toast.LENGTH_SHORT).show());
         }
+        showedUserMenu.clear();
+        showedUserMenu.addItem(userMenu.get(0));
+        if (Api.Auth().getState() && post.getUserId() != Api.Auth().getUserIdInt())
+            showedUserMenu.addItem(userMenu.get(1));
+        showedUserMenu.addItem(userMenu.get(2));
+        showedUserMenu.addItem(userMenu.get(3));
+        showedUserMenu.addItem(userMenu.get(4));
         new AlertDialog.Builder(theme.getContext())
                 .setTitle(post.getNick())
-                .setItems(userMenu.getTitles(), (dialogInterface, i) -> userMenu.onClick(i, post))
+                .setItems(showedUserMenu.getTitles(), (dialogInterface, i) -> showedUserMenu.onClick(i, theme, post))
                 .show();
     }
 
-    public static void showReputationMenu(ThemeFragmentWeb theme, ThemePost post) {
+    static void showReputationMenu(ThemeFragment theme, ThemePost post) {
         if (reputationMenu == null) {
             reputationMenu = new AlertDialogMenu<>();
-            reputationMenu.addItem("Посмотреть", data -> Toast.makeText(theme.getContext(), "Слепой", Toast.LENGTH_SHORT).show());
+            showedReputationMenu = new AlertDialogMenu<>();
+            reputationMenu.addItem("Повысить", (context, data) -> context.changeReputation(data, true));
+            reputationMenu.addItem("Посмотреть", (context, data) -> Toast.makeText(context.getContext(), "Слепой", Toast.LENGTH_SHORT).show());
+            reputationMenu.addItem("Понизить", (context, data) -> context.changeReputation(data, false));
         }
+        showedReputationMenu.clear();
         if (Api.Auth().getState()) {
-            int index = reputationMenu.containsIndex("Повысить");
-            if (index == -1) {
-                if (post.canPlusRep())
-                    reputationMenu.addItem(0, "Повысить", data -> theme.changeReputation(post, true));
-            } else {
-                if (!post.canPlusRep())
-                    reputationMenu.remove(index);
-            }
-
-            index = reputationMenu.containsIndex("Понизить");
-            if (index == -1) {
-                if (post.canPlusRep())
-                    reputationMenu.addItem(2, "Понизить", data -> theme.changeReputation(post, false));
-            } else {
-                if (!post.canPlusRep())
-                    reputationMenu.remove(index);
-            }
+            if (post.canPlusRep())
+                showedReputationMenu.addItem(reputationMenu.get(0));
+            showedReputationMenu.addItem(reputationMenu.get(1));
+            if (post.canMinusRep())
+                showedReputationMenu.addItem(reputationMenu.get(2));
         }
         new AlertDialog.Builder(theme.getContext())
                 .setTitle("Репутация ".concat(post.getNick()))
-                .setItems(reputationMenu.getTitles(), (dialogInterface, i) -> reputationMenu.onClick(i, post))
+                .setItems(showedReputationMenu.getTitles(), (dialogInterface, i) -> showedReputationMenu.onClick(i, theme, post))
                 .show();
     }
 
-    public static void showPostMenu(ThemeFragmentWeb theme, ThemePost post) {
+
+    static void showPostMenu(ThemeFragment theme, ThemePost post) {
         if (postMenu == null) {
             postMenu = new AlertDialogMenu<>();
-            if (Api.Auth().getState()) {
-                if (theme.pageData.canQuote()) {
-                    postMenu.addItem("Ответить", data -> theme.insertNick(post));
-                }
-                if (post.canReport()) {
-                    postMenu.addItem("Пожаловаться", data -> theme.reportPost(post));
-                }
-            }
-            postMenu.addItem("Ссылка на сообщение", data -> Toast.makeText(theme.getContext(), "Не умею", Toast.LENGTH_SHORT).show());
+            showedPostMenu = new AlertDialogMenu<>();
+            postMenu.addItem("Ответить", ThemeFragment::insertNick);
+            postMenu.addItem("Пожаловаться", ThemeFragment::reportPost);
+            postMenu.addItem("Изменить", ThemeFragment::editPost);
+            postMenu.addItem("Удалить", ThemeFragment::deletePost);
+            postMenu.addItem("Ссылка на сообщение", (context, data) -> Toast.makeText(context.getContext(), "Не умею", Toast.LENGTH_SHORT).show());
         }
+        showedPostMenu.clear();
+        if (Api.Auth().getState()) {
+            if (theme.pageData.canQuote())
+                showedPostMenu.addItem(postMenu.get(0));
+            if (post.canReport())
+                showedPostMenu.addItem(postMenu.get(1));
+            if (post.canEdit())
+                showedPostMenu.addItem(postMenu.get(2));
+            if (post.canDelete())
+                showedPostMenu.addItem(postMenu.get(3));
+        }
+        showedPostMenu.addItem(postMenu.get(4));
         new AlertDialog.Builder(theme.getContext())
-                .setItems(postMenu.getTitles(), (dialogInterface, i) -> postMenu.onClick(i, post))
+                .setItems(showedPostMenu.getTitles(), (dialogInterface, i) -> showedPostMenu.onClick(i, theme, post))
                 .show();
     }
 
-    public static void selectPage(ThemeFragmentWeb theme, ThemePage pageData) {
+    static void selectPage(ThemeFragment theme, ThemePage pageData) {
         final int[] pages = new int[pageData.getAllPagesCount()];
 
         for (int i = 0; i < pageData.getAllPagesCount(); i++)
@@ -109,7 +119,8 @@ public class ThemeDialogsHelper {
                 .setView(view)
                 .show();
 
-        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        if (dialog.getWindow() != null)
+            dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
         listView.setOnItemClickListener((adapterView, view1, i2, l) -> {
             if (listView.getTag() != null && !((Boolean) listView.getTag())) {

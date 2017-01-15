@@ -2,7 +2,6 @@ package forpdateam.ru.forpda.utils;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.Html;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -68,7 +67,7 @@ public class IntentHandler {
 
     public static boolean handle(String url, Bundle args) {
         Log.d("kek", "input url " + url);
-        url = Html.fromHtml(url).toString();
+        //url = Html.fromHtml(url).toString();
         Log.d("kek", "after html url " + url);
         Uri uri = Uri.parse(url.toLowerCase());
         Log.d("kek", "HANDLE URL " + uri.toString() + " : " + url);
@@ -143,7 +142,7 @@ public class IntentHandler {
                             run("qms chat " + uri.getQueryParameter("mid") + " : " + uri.getQueryParameter("t"));
                             args.putInt(QmsChatFragment.THEME_ID_ARG, Integer.parseInt(uri.getQueryParameter("t")));
                             args.putInt(QmsChatFragment.USER_ID_ARG, Integer.parseInt(uri.getQueryParameter("mid")));
-                            TabManager.getInstance().add(new TabFragment.Builder<>(QmsContactsFragment.class).setArgs(args).build());
+                            TabManager.getInstance().add(new TabFragment.Builder<>(QmsChatFragment.class).setArgs(args).build());
                         } else {
                             run("qms thread " + uri.getQueryParameter("mid"));
                             args.putInt(QmsThemesFragment.USER_ID_ARG, Integer.parseInt(uri.getQueryParameter("mid")));

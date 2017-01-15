@@ -12,7 +12,6 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.graphics.drawable.DrawerArrowDrawable;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,6 +29,7 @@ import forpdateam.ru.forpda.R;
 import forpdateam.ru.forpda.TabManager;
 import forpdateam.ru.forpda.api.Api;
 import forpdateam.ru.forpda.client.Client;
+import forpdateam.ru.forpda.fragments.theme.editpost.EditPostFragment;
 import forpdateam.ru.forpda.settings.SettingsActivity;
 import forpdateam.ru.forpda.utils.ErrorHandler;
 import io.reactivex.Observable;
@@ -124,7 +124,7 @@ public class TabFragment extends RxFragment implements ITabFragment {
 
     @Override
     public void hidePopupWindows() {
-        getMainActivity().hidePopupWindows();
+        getMainActivity().hideKeyboard();
     }
 
     //Загрузка каких-то данных, выполняется только при наличии сети
@@ -210,14 +210,23 @@ public class TabFragment extends RxFragment implements ITabFragment {
         if (Client.getInstance().getNetworkState()) {
             loadData();
         }
-        toolbar.getMenu().add("logout").setOnMenuItemClickListener(menuItem -> {
-            new Task().execute();
+        /*toolbar.getMenu().add("TESTQMS").setOnMenuItemClickListener(menuItem -> {
+            IntentHandler.handle("http://4pda.ru/forum/index.php?act=qms&mid=5106086&t=3472875");
+            return false;
+        });*/
+        toolbar.getMenu().add("TEST FULLFORM").setOnMenuItemClickListener(menuItem -> {
+            TabManager.getInstance().add(new TabFragment.Builder<>(EditPostFragment.class).build());
             return false;
         });
         toolbar.getMenu().add("SETTINGS").setOnMenuItemClickListener(menuItem -> {
             getMainActivity().startActivity(new Intent(getContext(), SettingsActivity.class));
             return false;
         });
+        toolbar.getMenu().add("logout").setOnMenuItemClickListener(menuItem -> {
+            new Task().execute();
+            return false;
+        });
+
     }
 
     private void updateNotifyDot() {
@@ -336,12 +345,14 @@ public class TabFragment extends RxFragment implements ITabFragment {
     @Override
     public void onPause() {
         super.onPause();
+        hidePopupWindows();
         Log.d("kek", this + " : onpause");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        hidePopupWindows();
         //Client.getInstance().cancelCallByUrl(getTabUrl());
     }
 

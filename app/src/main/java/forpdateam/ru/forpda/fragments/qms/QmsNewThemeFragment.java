@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatAutoCompleteTextView;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.CardView;
-import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -24,6 +23,7 @@ import forpdateam.ru.forpda.R;
 import forpdateam.ru.forpda.TabManager;
 import forpdateam.ru.forpda.api.Api;
 import forpdateam.ru.forpda.fragments.TabFragment;
+import forpdateam.ru.forpda.utils.SimpleTextWatcher;
 
 /**
  * Created by radiationx on 20.09.16.
@@ -80,22 +80,12 @@ public class QmsNewThemeFragment extends TabFragment {
             nickField.setVisibility(View.GONE);
             ((View) nickField.getParent()).setVisibility(View.GONE);
         } else {
-            nickField.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                }
-
+            nickField.addTextChangedListener(new SimpleTextWatcher() {
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
                     searchUser(s.toString());
                     if (userId == 0)
                         userNick = nickField.getText().toString();
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-
                 }
             });
         }
@@ -122,12 +112,7 @@ public class QmsNewThemeFragment extends TabFragment {
         return view;
     }
 
-    private TextWatcher textWatcher = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
-
+    private TextWatcher textWatcher = new SimpleTextWatcher() {
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             if ((userId != 0 || userNick.length() > 0) && titleField.getText().length() > 0 && messField.getText().length() > 0) {
@@ -135,11 +120,6 @@ public class QmsNewThemeFragment extends TabFragment {
             } else {
                 sendItem.setVisible(false);
             }
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-
         }
     };
 

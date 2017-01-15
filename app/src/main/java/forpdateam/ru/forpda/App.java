@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v7.content.res.AppCompatResources;
+import android.util.DisplayMetrics;
 import android.widget.Toast;
 
 import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
@@ -20,7 +21,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 
@@ -35,6 +35,27 @@ import io.realm.RealmConfiguration;
 public class App extends android.app.Application {
     private static App INSTANCE = new App();
     private SharedPreferences preferences;
+    private static int savedKeyboardHeight = 0;
+    public static int keyboardHeight = 0;
+    public static int statusBarHeight = 0;
+
+    public static int getStatusBarHeight() {
+        return statusBarHeight;
+    }
+
+    public static void setStatusBarHeight(int statusBarHeight) {
+        App.statusBarHeight = statusBarHeight;
+    }
+
+    public static int getKeyboardHeight() {
+        return keyboardHeight;
+    }
+
+    public static void setKeyboardHeight(int newKeyboardHeight) {
+        keyboardHeight = newKeyboardHeight;
+        if (keyboardHeight == savedKeyboardHeight) return;
+        App.getInstance().getPreferences().edit().putInt("keyboard_height", keyboardHeight).apply();
+    }
 
     public static App getInstance() {
         return INSTANCE;
@@ -130,6 +151,13 @@ public class App extends android.app.Application {
             } catch (Exception ignore) {
             }
         }
+        keyboardHeight = getPreferences().getInt("keyboard_height", getContext().getResources().getDimensionPixelSize(R.dimen.default_keyboard_height));
+        savedKeyboardHeight = keyboardHeight;
+    }
+
+    public int dpToPx(int dp) {
+        DisplayMetrics displayMetrics = getContext().getResources().getDisplayMetrics();
+        return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
     }
 
     public static HashMap<Integer, Drawable> drawableHashMap = new HashMap<>();

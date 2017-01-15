@@ -2,11 +2,9 @@ package forpdateam.ru.forpda;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -30,6 +28,8 @@ public class MainActivity extends AppCompatActivity implements TabManager.TabLis
     private MenuDrawer menuDrawer;
     private final View.OnClickListener toggleListener = view -> menuDrawer.toggleState();
     private final View.OnClickListener removeTabListener = view -> backHandler(true);
+
+
 
     public View.OnClickListener getToggleListener() {
         return toggleListener;
@@ -65,9 +65,6 @@ public class MainActivity extends AppCompatActivity implements TabManager.TabLis
 
             @Override
             public void onDrawerOpened(View drawerView) {
-                if (MainActivity.this.getCurrentFocus() != null)
-                    ((InputMethodManager) MainActivity.this.getSystemService(Activity.INPUT_METHOD_SERVICE))
-                            .hideSoftInputFromWindow(MainActivity.this.getCurrentFocus().getWindowToken(), 0);
                 if (TabManager.getInstance().getSize() > 0)
                     TabManager.getInstance().getActive().hidePopupWindows();
             }
@@ -86,6 +83,8 @@ public class MainActivity extends AppCompatActivity implements TabManager.TabLis
         TabManager.getInstance().update();
         receiver = new NetworkStateReceiver(this);
         receiver.registerReceiver();
+        final View viewDiff = findViewById(R.id.fragments_container);
+        viewDiff.post(() -> App.setStatusBarHeight(viewDiff.getRootView().getHeight() - viewDiff.getHeight()));
         //IntentHandler.handle("http://4pda.ru/forum/index.php?showtopic=84979&view=getnewpost");
     }
 
@@ -136,9 +135,15 @@ public class MainActivity extends AppCompatActivity implements TabManager.TabLis
         backHandler(false);
     }
 
-    public void hidePopupWindows() {
-        ((InputMethodManager) MainActivity.this.getSystemService(Activity.INPUT_METHOD_SERVICE))
-                .hideSoftInputFromWindow(MainActivity.this.getCurrentFocus().getWindowToken(), 0);
+    public void hideKeyboard() {
+        if (MainActivity.this.getCurrentFocus() != null)
+            ((InputMethodManager) MainActivity.this.getSystemService(Activity.INPUT_METHOD_SERVICE))
+                    .hideSoftInputFromWindow(MainActivity.this.getCurrentFocus().getWindowToken(), 0);
+    }
+    public void showKeyboard(View view) {
+        if (MainActivity.this.getCurrentFocus() != null)
+            ((InputMethodManager) MainActivity.this.getSystemService(Activity.INPUT_METHOD_SERVICE))
+                    .showSoftInput(view, 0);
     }
 
     public void backHandler(boolean isToolbarButton) {
@@ -146,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements TabManager.TabLis
             super.onBackPressed();
         } else {
             if (isToolbarButton || !TabManager.getInstance().getActive().onBackPressed()) {
-                hidePopupWindows();
+                hideKeyboard();
                 TabManager.getInstance().remove(TabManager.getInstance().getActive());
             }
         }
@@ -161,6 +166,7 @@ public class MainActivity extends AppCompatActivity implements TabManager.TabLis
         super.onResume();
         Log.d("kekos", "ACTIVE TAB " + TabManager.getActiveIndex() + " : " + TabManager.getActiveTag());
         receiver.registerReceiver();
+
     }
 
     @Override

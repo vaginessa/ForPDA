@@ -3,10 +3,6 @@ package forpdateam.ru.forpda.fragments.auth;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.rahatarmanahmed.cpv.CircularProgressView;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -30,6 +25,7 @@ import forpdateam.ru.forpda.api.auth.AuthParser;
 import forpdateam.ru.forpda.api.auth.models.AuthForm;
 import forpdateam.ru.forpda.api.profile.models.ProfileModel;
 import forpdateam.ru.forpda.fragments.TabFragment;
+import forpdateam.ru.forpda.utils.SimpleTextWatcher;
 import forpdateam.ru.forpda.utils.ourparser.Html;
 
 /**
@@ -85,13 +81,7 @@ public class AuthFragment extends TabFragment {
         return view;
     }
 
-    private class MyTW implements TextWatcher {
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
-
+    private class MyTW extends SimpleTextWatcher {
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             if (!nick.getText().toString().isEmpty() && !password.getText().toString().isEmpty() && captcha.getText().toString().length() == 4) {
@@ -101,11 +91,6 @@ public class AuthFragment extends TabFragment {
                 if (send.isEnabled())
                     send.setEnabled(false);
             }
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-
         }
     }
 
