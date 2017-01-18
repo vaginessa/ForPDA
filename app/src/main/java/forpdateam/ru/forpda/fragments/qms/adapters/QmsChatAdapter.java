@@ -33,70 +33,27 @@ import forpdateam.ru.forpda.utils.ourparser.htmltags.UlTag;
  */
 public class QmsChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<QmsMessage> chatItems;
     private final static int TYPE_DATE = 0, TYPE_MESSAGE = 1, TYPE_MY_MESSAGE = 2;
+    private final static Pattern p2 = Pattern.compile("^(b|i|u|del|s|strike|sub|sup|span|a|br)$");
+    private final static Pattern startBreakTag = Pattern.compile("^([ ]*|)<br>");
+    private final static Pattern endBreakTag = Pattern.compile("<br>([ ]*|)$");
+    private List<QmsMessage> chatItems;
     private Context context;
     private QmsChatAdapter.OnItemClickListener itemClickListener;
     private QmsChatAdapter.OnLongItemClickListener longItemClickListener;
+    private HashMap<Integer, BaseTag> createdTrees = new HashMap<>();
 
-    public interface OnItemClickListener {
-        void onItemClick(QmsMessage message);
+    public QmsChatAdapter(List<QmsMessage> chatItems, Context context) {
+        this.chatItems = chatItems;
+        this.context = context;
     }
 
     public void setOnItemClickListener(final QmsChatAdapter.OnItemClickListener mItemClickListener) {
         this.itemClickListener = mItemClickListener;
     }
 
-    public interface OnLongItemClickListener {
-        void onLongItemClick(QmsMessage message);
-    }
-
     public void setOnLongItemClickListener(final QmsChatAdapter.OnLongItemClickListener longItemClickListener) {
         this.longItemClickListener = longItemClickListener;
-    }
-
-    public class MessageViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
-        public TextView time;
-        public LinearLayout root;
-
-        public MessageViewHolder(View v) {
-            super(v);
-            time = (TextView) v.findViewById(R.id.time);
-            root = (LinearLayout) v.findViewById(R.id.chat_item_wrapper);
-            v.setOnClickListener(this);
-            v.setOnLongClickListener(this);
-        }
-
-        @Override
-        public void onClick(View view) {
-            if (itemClickListener != null) {
-                itemClickListener.onItemClick(getItem(getLayoutPosition()));
-            }
-        }
-
-        @Override
-        public boolean onLongClick(View view) {
-            if (longItemClickListener != null) {
-                longItemClickListener.onLongItemClick(getItem(getLayoutPosition()));
-                return true;
-            }
-            return false;
-        }
-    }
-
-    public class DateViewHolder extends RecyclerView.ViewHolder {
-        public TextView date;
-
-        public DateViewHolder(View v) {
-            super(v);
-            date = (TextView) v.findViewById(R.id.qmsdate);
-        }
-
-    }
-
-    public QmsChatAdapter(List<QmsMessage> chatItems, Context context) {
-        this.chatItems = chatItems;
-        this.context = context;
     }
 
     @Override
@@ -145,8 +102,6 @@ public class QmsChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         holder.time.setText(item.getTime());
     }
 
-    private HashMap<Integer, BaseTag> createdTrees = new HashMap<>();
-
     @Override
     public int getItemCount() {
         return chatItems.size();
@@ -160,8 +115,6 @@ public class QmsChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
     }
-
-    private final static Pattern p2 = Pattern.compile("^(b|i|u|del|s|strike|sub|sup|span|a|br)$");
 
     private BaseTag recurseUi(final Element element) {
         BaseTag thisView = null;
@@ -254,9 +207,6 @@ public class QmsChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         return thisView;
     }
 
-    private final static Pattern startBreakTag = Pattern.compile("^([ ]*|)<br>");
-    private final static Pattern endBreakTag = Pattern.compile("<br>([ ]*|)$");
-
     private BaseTag getViewByTag(String tag) {
         switch (tag) {
             case "h1":
@@ -274,5 +224,51 @@ public class QmsChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public Context getContext() {
         return context;
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(QmsMessage message);
+    }
+    public interface OnLongItemClickListener {
+        void onLongItemClick(QmsMessage message);
+    }
+
+    public class MessageViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
+        public TextView time;
+        public LinearLayout root;
+
+        public MessageViewHolder(View v) {
+            super(v);
+            time = (TextView) v.findViewById(R.id.time);
+            root = (LinearLayout) v.findViewById(R.id.chat_item_wrapper);
+            v.setOnClickListener(this);
+            v.setOnLongClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            if (itemClickListener != null) {
+                itemClickListener.onItemClick(getItem(getLayoutPosition()));
+            }
+        }
+
+        @Override
+        public boolean onLongClick(View view) {
+            if (longItemClickListener != null) {
+                longItemClickListener.onLongItemClick(getItem(getLayoutPosition()));
+                return true;
+            }
+            return false;
+        }
+    }
+
+    public class DateViewHolder extends RecyclerView.ViewHolder {
+        public TextView date;
+
+        public DateViewHolder(View v) {
+            super(v);
+            date = (TextView) v.findViewById(R.id.qmsdate);
+        }
+
     }
 }

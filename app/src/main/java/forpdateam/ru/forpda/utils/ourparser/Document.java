@@ -10,18 +10,17 @@ import java.util.regex.Pattern;
  * Created by radiationx on 13.09.16.
  */
 public class Document {
-    private Element root;
     //private final static Pattern nonClosedTags = Pattern.compile("(<(area|base|br|col|colgroup|command|embed|hr|img|input|keygen|link|meta|param|source|track|wbr)([^>]*?)(/|)>)");
     //private final static Pattern unclosedTags = Pattern.compile("(?:area|area|br|col|colgroup|command|embed|hr|img|input|keygen|link|meta|param|source|track|wbr)");
     private final static Pattern commentTag = Pattern.compile("<!--[\\s\\S]*?-->");
     private final static Pattern scriptBlock = Pattern.compile("");
-
     private final static Pattern mainPattern = Pattern.compile("<([^\\/!][\\w]*)(?: |)([^>]*)>([^<]*)|<\\/([\\w]*)>([^<]*)");
     private final static Pattern mainPattern2 = Pattern.compile("(?:<([^\\/!][\\w]*)(?: ([^>]*))?>|<\\/([\\w]*)>)(?:([^<]+))?");
     private final static Pattern mainPattern3 = Pattern.compile("(?:<([\\/])?([\\w]*)(?: ([^\\/][^>]*[^\\/]))?( \\/)?>)(?:([^<]+))?");
     private final static Pattern mainPattern4 = Pattern.compile("(?:<([\\/])?([\\w]*)(?: ([^>]*))?\\/?>)(?:([^<]+))?");
     //private final static Pattern attrPattern = Pattern.compile("([^ \"]*?)=[\"']([^\"']*)[\"']");
     private final static String[] uTags = {"area", "area", "br", "col", "colgroup", "command", "embed", "hr", "img", "input", "keygen", "link", "meta", "param", "source", "track", "wbr"};
+    private Element root;
 
     public static Document parse(String html) {
         long time;
@@ -35,7 +34,7 @@ public class Document {
         }
         html = sb.toString();
         sb = new StringBuilder();*/
-        for(String s :html.split("<script[^>]*>[\\s\\S]*?</script>")){
+        for (String s : html.split("<script[^>]*>[\\s\\S]*?</script>")) {
             sb.append(s);
         }
         html = sb.toString();

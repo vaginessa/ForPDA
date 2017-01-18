@@ -34,42 +34,12 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class Client {
-    private static final String userAgent = WebSettings.getDefaultUserAgent(App.getContext());
-    private static Client INSTANCE = new Client();
     public static final String minimalPage = "http://4pda.ru/forum/index.php?showforum=200";
-    private static List<Cookie> cookies;
-    private NetworkObservable networkObserver = new NetworkObservable();
+    private static final String userAgent = WebSettings.getDefaultUserAgent(App.getContext());
+    private final static Pattern countsPattern = Pattern.compile("act=mentions[^>]*?><i[^>]*?>([^<]*?)<\\/i>[\\s\\S]*?act=fav[^>]*?><i[^>]*?>([^<]*?)<\\/i>[\\s\\S]*?act=qms[^>]*?data-count=\"([^\">]*?)\">");
     public static String member_id;
-
-    //Class
-    public Client() {
-        INSTANCE = this;
-        cookies = new ArrayList<>();
-        String member_id = App.getInstance().getPreferences().getString("cookie_member_id", null);
-        String pass_hash = App.getInstance().getPreferences().getString("cookie_pass_hash", null);
-        Api.Auth().setUserId(App.getInstance().getPreferences().getString("member_id", null));
-        if (member_id != null && pass_hash != null) {
-            Api.Auth().setState(true);
-            //Первичная загрузка кукисов
-            cookies.add(parseCookie(member_id));
-            cookies.add(parseCookie(pass_hash));
-        }
-    }
-
-    public static String getAuthKey(){
-        return App.getInstance().getPreferences().getString("auth_key", "0");
-    }
-
-    public static Client getInstance() {
-        return INSTANCE;
-    }
-
-    private Cookie parseCookie(String cookieFields) {
-        /*Хранение: Url|:|Cookie*/
-        String[] fields = cookieFields.split("\\|:\\|");
-        return Cookie.parse(HttpUrl.parse(fields[0]), fields[1]);
-    }
-
+    private static Client INSTANCE = new Client();
+    private static List<Cookie> cookies;
     private final OkHttpClient client = new OkHttpClient.Builder()
             .cookieJar(new CookieJar() {
                 @Override
@@ -101,6 +71,44 @@ public class Client {
                 }
             })
             .build();
+    private NetworkObservable networkObserver = new NetworkObservable();
+    private Matcher countsMatcher;
+    private String tempGroup;
+    private Handler observerHandler = new Handler(Looper.getMainLooper());
+    private Map<String, String> redirects = new HashMap<>();
+
+    //Class
+    public Client() {
+        INSTANCE = this;
+        cookies = new ArrayList<>();
+        String member_id = App.getInstance().getPreferences().getString("cookie_member_id", null);
+        String pass_hash = App.getInstance().getPreferences().getString("cookie_pass_hash", null);
+        Api.Auth().setUserId(App.getInstance().getPreferences().getString("member_id", null));
+        if (member_id != null && pass_hash != null) {
+            Api.Auth().setState(true);
+            //Первичная загрузка кукисов
+            cookies.add(parseCookie(member_id));
+            cookies.add(parseCookie(pass_hash));
+        }
+    }
+
+    public static String getAuthKey() {
+        return App.getInstance().getPreferences().getString("auth_key", "0");
+    }
+
+    public static Client getInstance() {
+        return INSTANCE;
+    }
+
+    public static List<Cookie> getCookies() {
+        return cookies;
+    }
+
+    private Cookie parseCookie(String cookieFields) {
+        /*Хранение: Url|:|Cookie*/
+        String[] fields = cookieFields.split("\\|:\\|");
+        return Cookie.parse(HttpUrl.parse(fields[0]), fields[1]);
+    }
 
     public String getMimeType(Uri uri) {
         String mimeType = null;
@@ -142,7 +150,7 @@ public class Client {
                 for (Map.Entry<String, String> entry : headers.entrySet()) {
                     //formBodyBuilder.addFormDataPart(entry.getKey(), URLEncoder.encode(entry.getValue(), "CP1251"));
                     formBodyBuilder.addFormDataPart(entry.getKey(), entry.getValue());
-                    Log.d("SUKA", "ADD FORM DATA PART "+entry.getKey()+" : "+entry.getValue());
+                    Log.d("SUKA", "ADD FORM DATA PART " + entry.getKey() + " : " + entry.getValue());
                 }
             }
             if (file != null) {
@@ -164,7 +172,7 @@ public class Client {
         } finally {
             if (response != null)
                 response.close();
-            if(file!=null&&file.getFileStream()!=null)
+            if (file != null && file.getFileStream() != null)
                 file.getFileStream().close();
         }
         return res;
@@ -177,11 +185,6 @@ public class Client {
             throw new OnlyShowException(Html.fromHtml(m.group(1)).toString());
         }
     }
-
-    private final static Pattern countsPattern = Pattern.compile("act=mentions[^>]*?><i[^>]*?>([^<]*?)<\\/i>[\\s\\S]*?act=fav[^>]*?><i[^>]*?>([^<]*?)<\\/i>[\\s\\S]*?act=qms[^>]*?data-count=\"([^\">]*?)\">");
-    private Matcher countsMatcher;
-    private String tempGroup;
-    private Handler observerHandler = new Handler(Looper.getMainLooper());
 
     private void getCounts(String res) {
         if (countsMatcher == null)
@@ -210,14 +213,8 @@ public class Client {
         }
     }
 
-    private Map<String, String> redirects = new HashMap<>();
-
     public String getRedirect(String url) {
         return redirects.get(url);
-    }
-
-    public static List<Cookie> getCookies() {
-        return cookies;
     }
 
     public void addNetworkObserver(Observer observer) {
@@ -228,18 +225,18 @@ public class Client {
         networkObserver.notifyObservers(b);
     }
 
-    private class NetworkObservable extends java.util.Observable {
-        @Override
-        public synchronized boolean hasChanged() {
-            return true;
-        }
-    }
-
     public boolean getNetworkState() {
         ConnectivityManager cm =
                 (ConnectivityManager) App.getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+    }
+
+    private class NetworkObservable extends java.util.Observable {
+        @Override
+        public synchronized boolean hasChanged() {
+            return true;
+        }
     }
 }

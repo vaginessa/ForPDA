@@ -22,9 +22,17 @@ public class QmsContact extends RealmObject implements IQmsContact {
         return nick;
     }
 
+    public void setNick(String nick) {
+        this.nick = nick;
+    }
+
     @Override
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     @Override
@@ -32,24 +40,16 @@ public class QmsContact extends RealmObject implements IQmsContact {
         return count;
     }
 
+    public void setCount(int count) {
+        this.count = count;
+    }
+
     @Override
     public String getAvatar() {
         return avatar;
     }
 
-    public void setNick(String nick) {
-        this.nick = nick;
-    }
-
     public void setAvatar(String avatar) {
         this.avatar = avatar;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setCount(int count) {
-        this.count = count;
     }
 }

@@ -11,7 +11,7 @@ public class WebViewQueue<E> extends PriorityQueue<E> {
         super(10);
     }
 
-    public E get(){
+    public E get() {
         return element();
     }
 }

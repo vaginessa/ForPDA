@@ -60,7 +60,6 @@ public class ElementHelper {
     }
 
 
-
     public static String getAllText(Element element) {
         String text = "";
         //text+=" "+element.getText();
@@ -82,7 +81,7 @@ public class ElementHelper {
     }
 
 
-    public static List<Pair<String,String>> parseAttrs(String source, List<Pair<String,String>> attrs){
+    public static List<Pair<String, String>> parseAttrs(String source, List<Pair<String, String>> attrs) {
         if (!source.isEmpty()) {
             Matcher attrMatcher = attrPattern.matcher(source);
             while (attrMatcher.find())

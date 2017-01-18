@@ -11,14 +11,14 @@ import android.webkit.WebView;
  */
 
 public class DialogsHelper {
-    private static AlertDialogMenu<Context, Pair<String, String>> alertDialogMenu;
-    private static AlertDialogMenu<Context, Pair<String, String>> showedAlertDialogMenu;
     private final static String openNewTab = "Открыть в новой вкладке";
     private final static String openBrowser = "Открыть в браузере";
     private final static String copyUrl = "Скопировать ссылку";
     private final static String openImage = "Открыть изображение";
     private final static String saveImage = "Сохранить изображение";
     private final static String copyImageUrl = "Скопировать ссылку изображения";
+    private static AlertDialogMenu<Context, Pair<String, String>> alertDialogMenu;
+    private static AlertDialogMenu<Context, Pair<String, String>> showedAlertDialogMenu;
 
     public static void handleContextMenu(Context context, int type, String extra, String nodeHref) {
 

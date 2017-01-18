@@ -15,9 +15,17 @@ public class ThemePost implements IThemePost {
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     @Override
     public String getDate() {
         return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
     @Override
@@ -25,12 +33,24 @@ public class ThemePost implements IThemePost {
         return number;
     }
 
+    public void setNumber(int number) {
+        this.number = number;
+    }
+
     public String getAvatar() {
         return avatar;
     }
 
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
     public String getNick() {
         return nick;
+    }
+
+    public void setNick(String nick) {
+        this.nick = nick;
     }
 
     @Override
@@ -38,9 +58,19 @@ public class ThemePost implements IThemePost {
         return groupColor;
     }
 
+    public void setGroupColor(String groupColor) {
+        if (groupColor == null)
+            groupColor = "black";
+        this.groupColor = groupColor;
+    }
+
     @Override
     public String getGroup() {
         return group;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
     }
 
     @Override
@@ -48,9 +78,17 @@ public class ThemePost implements IThemePost {
         return userId;
     }
 
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
     @Override
     public String getReputation() {
         return reputation;
+    }
+
+    public void setReputation(String reputation) {
+        this.reputation = reputation;
     }
 
     @Override
@@ -58,14 +96,26 @@ public class ThemePost implements IThemePost {
         return body;
     }
 
+    public void setBody(String body) {
+        this.body = body;
+    }
+
     @Override
     public boolean isCurator() {
         return curator;
     }
 
+    public void setCurator(boolean curator) {
+        this.curator = curator;
+    }
+
     @Override
     public boolean isOnline() {
         return online;
+    }
+
+    public void setOnline(boolean online) {
+        this.online = online;
     }
 
     @Override
@@ -91,57 +141,6 @@ public class ThemePost implements IThemePost {
     @Override
     public boolean canDelete() {
         return delete;
-    }
-
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public void setNumber(int number) {
-        this.number = number;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
-
-    public void setNick(String nick) {
-        this.nick = nick;
-    }
-
-    public void setGroupColor(String groupColor) {
-        if (groupColor == null)
-            groupColor = "black";
-        this.groupColor = groupColor;
-    }
-
-    public void setGroup(String group) {
-        this.group = group;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    public void setReputation(String reputation) {
-        this.reputation = reputation;
-    }
-
-    public void setBody(String body) {
-        this.body = body;
-    }
-
-    public void setCurator(boolean curator) {
-        this.curator = curator;
-    }
-
-    public void setOnline(boolean online) {
-        this.online = online;
     }
 
     public void setCanMinus(boolean minus) {

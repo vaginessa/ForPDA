@@ -14,6 +14,7 @@ public class ThemePage implements IThemePage {
     private Poll poll;
 
     private int id = 0, forumId = 0;
+    private int postsOnPageCount = 20, allPagesCount = 1, currentPage = 1, scrollY = 0;
 
     public boolean canQuote() {
         return quote;
@@ -38,8 +39,6 @@ public class ThemePage implements IThemePage {
     public void setCurator(boolean curator) {
         this.curator = curator;
     }
-
-    private int postsOnPageCount = 20, allPagesCount = 1, currentPage = 1, scrollY = 0;
 
     public int getScrollY() {
         return scrollY;
@@ -70,9 +69,17 @@ public class ThemePage implements IThemePage {
         return title;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     @Override
     public String getDesc() {
         return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 
     @Override
@@ -80,9 +87,17 @@ public class ThemePage implements IThemePage {
         return inFavorite;
     }
 
+    public void setInFavorite(boolean inFavorite) {
+        this.inFavorite = inFavorite;
+    }
+
     @Override
     public int getPostsOnPageCount() {
         return postsOnPageCount;
+    }
+
+    public void setPostsOnPageCount(int postsOnPageCount) {
+        this.postsOnPageCount = postsOnPageCount;
     }
 
     @Override
@@ -90,9 +105,17 @@ public class ThemePage implements IThemePage {
         return allPagesCount;
     }
 
+    public void setAllPagesCount(int allPagesCount) {
+        this.allPagesCount = allPagesCount;
+    }
+
     @Override
     public int getCurrentPage() {
         return currentPage;
+    }
+
+    public void setCurrentPage(int currentPage) {
+        this.currentPage = currentPage;
     }
 
     @Override
@@ -100,32 +123,8 @@ public class ThemePage implements IThemePage {
         return posts;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setDesc(String desc) {
-        this.desc = desc;
-    }
-
-    public void setInFavorite(boolean inFavorite) {
-        this.inFavorite = inFavorite;
-    }
-
-    public void setPostsOnPageCount(int postsOnPageCount) {
-        this.postsOnPageCount = postsOnPageCount;
-    }
-
-    public void setAllPagesCount(int allPagesCount) {
-        this.allPagesCount = allPagesCount;
-    }
-
     public void addPost(ThemePost post) {
         posts.add(post);
-    }
-
-    public void setCurrentPage(int currentPage) {
-        this.currentPage = currentPage;
     }
 
     public String getHtml() {

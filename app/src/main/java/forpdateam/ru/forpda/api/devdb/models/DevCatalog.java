@@ -9,6 +9,17 @@ public class DevCatalog implements ICatalogItem, Parcelable {
     public static final int ROOT = -1;
     public static final int DEVICE_TYPE = 0;
     public static final int DEVICE_BRAND = 1;
+    public static final Parcelable.Creator<DevCatalog> CREATOR = new Parcelable.Creator<DevCatalog>() {
+        // распаковываем объект из Parcel
+        public DevCatalog createFromParcel(Parcel in) {
+
+            return new DevCatalog(in);
+        }
+
+        public DevCatalog[] newArray(int size) {
+            return new DevCatalog[size];
+        }
+    };
     private String mId;
     private String mTitle;
     private String mImageUrl;
@@ -19,6 +30,17 @@ public class DevCatalog implements ICatalogItem, Parcelable {
     public DevCatalog(String id, String title) {
         mId = id;
         mTitle = title;
+    }
+
+    private DevCatalog(Parcel parcel) {
+        mId = parcel.readString();
+        mTitle = parcel.readString();
+        description = parcel.readString();
+        mImageUrl = parcel.readString();
+        type = parcel.readInt();
+        Boolean hasParent = parcel.readByte() == 1;
+        if (hasParent)
+            parent = new DevCatalog(parcel);
     }
 
     @Override
@@ -35,7 +57,6 @@ public class DevCatalog implements ICatalogItem, Parcelable {
     public CharSequence getSubTitle() {
         return description;
     }
-
 
     @Override
     public ICatalogItem getParent() {
@@ -73,33 +94,9 @@ public class DevCatalog implements ICatalogItem, Parcelable {
         return type;
     }
 
-
     public DevCatalog setType(int type) {
         this.type = type;
         return this;
-    }
-
-    public static final Parcelable.Creator<DevCatalog> CREATOR = new Parcelable.Creator<DevCatalog>() {
-        // распаковываем объект из Parcel
-        public DevCatalog createFromParcel(Parcel in) {
-
-            return new DevCatalog(in);
-        }
-
-        public DevCatalog[] newArray(int size) {
-            return new DevCatalog[size];
-        }
-    };
-
-    private DevCatalog(Parcel parcel) {
-        mId = parcel.readString();
-        mTitle = parcel.readString();
-        description = parcel.readString();
-        mImageUrl = parcel.readString();
-        type = parcel.readInt();
-        Boolean hasParent = parcel.readByte() == 1;
-        if (hasParent)
-            parent = new DevCatalog(parcel);
     }
 
     @Override

@@ -66,6 +66,10 @@ public class AlertDialogMenu<T, E> {
         items.get(i).onClick(context, data);
     }
 
+    public interface OnClickListener<T, E> {
+        void onClick(T context, E data);
+    }
+
     public class MenuItem implements OnClickListener<T, E> {
         private OnClickListener<T, E> listener;
         private CharSequence title;
@@ -84,9 +88,5 @@ public class AlertDialogMenu<T, E> {
             if (listener != null)
                 listener.onClick(context, data);
         }
-    }
-
-    public interface OnClickListener<T, E> {
-        void onClick(T context, E data);
     }
 }

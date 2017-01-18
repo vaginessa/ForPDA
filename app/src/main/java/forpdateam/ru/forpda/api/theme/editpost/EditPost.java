@@ -158,7 +158,7 @@ public class EditPost {
         headers.put("enableemo", "yes");
 
 
-        headers.put("st", ""+form.getSt());
+        headers.put("st", "" + form.getSt());
         headers.put("removeattachid", "0");
         headers.put("MAX_FILE_SIZE", "0");
         headers.put("parent_id", "0");

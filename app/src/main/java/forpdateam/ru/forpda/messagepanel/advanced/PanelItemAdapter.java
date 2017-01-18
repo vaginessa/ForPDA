@@ -30,6 +30,7 @@ public class PanelItemAdapter extends RecyclerView.Adapter<PanelItemAdapter.View
     private List<ButtonData> items;
     private List<String> urlsToAssets;
     private int type = -1;
+    private OnItemClickListener itemClickListener;
 
     public PanelItemAdapter(List<ButtonData> items, List<String> urlsToAssets, int type) {
         this.items = items;
@@ -58,12 +59,6 @@ public class PanelItemAdapter extends RecyclerView.Adapter<PanelItemAdapter.View
         }
     }
 
-    private OnItemClickListener itemClickListener;
-
-    public interface OnItemClickListener {
-        void onItemClick(ButtonData item);
-    }
-
     public void setOnItemClickListener(final OnItemClickListener mItemClickListener) {
         this.itemClickListener = mItemClickListener;
     }
@@ -71,6 +66,10 @@ public class PanelItemAdapter extends RecyclerView.Adapter<PanelItemAdapter.View
     @Override
     public int getItemCount() {
         return items.size();
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(ButtonData item);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

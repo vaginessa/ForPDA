@@ -23,8 +23,18 @@ public class ProfileModel implements IProfileModel {
     }
 
     @Override
+    public void setAvatar(String arg) {
+        avatar = arg;
+    }
+
+    @Override
     public String getNick() {
         return nick;
+    }
+
+    @Override
+    public void setNick(String arg) {
+        nick = arg;
     }
 
     @Override
@@ -33,8 +43,18 @@ public class ProfileModel implements IProfileModel {
     }
 
     @Override
+    public void setStatus(String arg) {
+        status = arg;
+    }
+
+    @Override
     public String getGroup() {
         return group;
+    }
+
+    @Override
+    public void setGroup(String arg) {
+        group = arg;
     }
 
     @Override
@@ -43,8 +63,18 @@ public class ProfileModel implements IProfileModel {
     }
 
     @Override
+    public void setRegDate(String arg) {
+        regDate = arg;
+    }
+
+    @Override
     public String getAlerts() {
         return alerts;
+    }
+
+    @Override
+    public void setAlerts(String arg) {
+        alerts = arg;
     }
 
     @Override
@@ -53,8 +83,18 @@ public class ProfileModel implements IProfileModel {
     }
 
     @Override
+    public void setOnlineDate(String arg) {
+        onlineDate = arg;
+    }
+
+    @Override
     public Spanned getSign() {
         return sign;
+    }
+
+    @Override
+    public void setSign(Spanned arg) {
+        sign = arg;
     }
 
     @Override
@@ -63,13 +103,28 @@ public class ProfileModel implements IProfileModel {
     }
 
     @Override
+    public void setGender(String arg) {
+        gender = arg;
+    }
+
+    @Override
     public String getBirthDay() {
         return birthday;
     }
 
     @Override
+    public void setBirthDay(String arg) {
+        birthday = arg;
+    }
+
+    @Override
     public String getUserTime() {
         return userTime;
+    }
+
+    @Override
+    public void setUserTime(String arg) {
+        userTime = arg;
     }
 
     @Override
@@ -88,8 +143,18 @@ public class ProfileModel implements IProfileModel {
     }
 
     @Override
+    public void setKarma(Pair<String, String> arg) {
+        karma = arg;
+    }
+
+    @Override
     public Pair<String, String> getSitePosts() {
         return sitePosts;
+    }
+
+    @Override
+    public void setSitePosts(Pair<String, String> arg) {
+        sitePosts = arg;
     }
 
     @Override
@@ -98,8 +163,18 @@ public class ProfileModel implements IProfileModel {
     }
 
     @Override
+    public void setComments(Pair<String, String> arg) {
+        comments = arg;
+    }
+
+    @Override
     public Pair<String, String> getReputation() {
         return reputation;
+    }
+
+    @Override
+    public void setReputation(Pair<String, String> arg) {
+        reputation = arg;
     }
 
     @Override
@@ -108,8 +183,18 @@ public class ProfileModel implements IProfileModel {
     }
 
     @Override
+    public void setTopics(Pair<String, String> arg) {
+        topics = arg;
+    }
+
+    @Override
     public Pair<String, String> getPosts() {
         return posts;
+    }
+
+    @Override
+    public void setPosts(Pair<String, String> arg) {
+        posts = arg;
     }
 
     @Override
@@ -118,63 +203,18 @@ public class ProfileModel implements IProfileModel {
     }
 
     @Override
+    public void setNote(String arg) {
+        note = arg;
+    }
+
+    @Override
     public Spanned getAbout() {
         return about;
     }
 
     @Override
-    public void setAvatar(String arg) {
-        avatar = arg;
-    }
-
-    @Override
-    public void setNick(String arg) {
-        nick = arg;
-    }
-
-    @Override
-    public void setStatus(String arg) {
-        status = arg;
-    }
-
-    @Override
-    public void setGroup(String arg) {
-        group = arg;
-    }
-
-    @Override
-    public void setRegDate(String arg) {
-        regDate = arg;
-    }
-
-    @Override
-    public void setAlerts(String arg) {
-        alerts = arg;
-    }
-
-    @Override
-    public void setOnlineDate(String arg) {
-        onlineDate = arg;
-    }
-
-    @Override
-    public void setSign(Spanned arg) {
-        sign = arg;
-    }
-
-    @Override
-    public void setGender(String arg) {
-        gender = arg;
-    }
-
-    @Override
-    public void setBirthDay(String arg) {
-        birthday = arg;
-    }
-
-    @Override
-    public void setUserTime(String arg) {
-        userTime = arg;
+    public void setAbout(Spanned arg) {
+        about = arg;
     }
 
     @Override
@@ -185,46 +225,6 @@ public class ProfileModel implements IProfileModel {
     @Override
     public void addDevice(Pair<String, String> arg) {
         devices.add(arg);
-    }
-
-    @Override
-    public void setKarma(Pair<String, String> arg) {
-        karma = arg;
-    }
-
-    @Override
-    public void setSitePosts(Pair<String, String> arg) {
-        sitePosts = arg;
-    }
-
-    @Override
-    public void setComments(Pair<String, String> arg) {
-        comments = arg;
-    }
-
-    @Override
-    public void setReputation(Pair<String, String> arg) {
-        reputation = arg;
-    }
-
-    @Override
-    public void setTopics(Pair<String, String> arg) {
-        topics = arg;
-    }
-
-    @Override
-    public void setPosts(Pair<String, String> arg) {
-        posts = arg;
-    }
-
-    @Override
-    public void setNote(String arg) {
-        note = arg;
-    }
-
-    @Override
-    public void setAbout(Spanned arg) {
-        about = arg;
     }
 
     public String getCity() {

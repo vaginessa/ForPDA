@@ -29,6 +29,7 @@ import io.realm.RealmResults;
  */
 
 public class FavoritesFragment extends TabFragment {
+    boolean markedRead = false;
     private SwipeRefreshLayout refreshLayout;
     private RecyclerView recyclerView;
     private FavoritesAdapter.OnItemClickListener onItemClickListener =
@@ -38,6 +39,11 @@ public class FavoritesFragment extends TabFragment {
                 IntentHandler.handle("http://4pda.ru/forum/index.php?showtopic=" + favItem.getTopicId() + "&view=getnewpost", args);
             };
     private AlertDialogMenu<FavoritesFragment, FavItem> favoriteDialogMenu;
+    private Realm realm;
+    private RealmResults<FavItem> results;
+    private FavoritesAdapter adapter;
+    private Subscriber<FavData> mainSubscriber = new Subscriber<>();
+    private Subscriber<Boolean> helperSubscriber = new Subscriber<>();
     private FavoritesAdapter.OnLongItemClickListener onLongItemClickListener =
             favItem -> {
                 if (favoriteDialogMenu == null) {
@@ -65,13 +71,6 @@ public class FavoritesFragment extends TabFragment {
                         })
                         .show();
             };
-
-    private Realm realm;
-    private RealmResults<FavItem> results;
-    private FavoritesAdapter adapter;
-    private Subscriber<FavData> mainSubscriber = new Subscriber<>();
-    private Subscriber<Boolean> helperSubscriber = new Subscriber<>();
-    boolean markedRead = false;
 
     private CharSequence getPinText(boolean b) {
         return b ? "Открепить" : "Закрепить";

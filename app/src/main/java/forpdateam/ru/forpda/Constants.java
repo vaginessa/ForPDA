@@ -42,8 +42,8 @@ public class Constants {
     public static final String NEWS_SUBCATEGORY_WP7_SOFTWARE = "software_wp7-news";
     public static final String NEWS_URL_WP7_SOFTWARE = "http://4pda.ru/software/tag/programs-for-windows-phone-7/";
     public static final String NEWS_SUBCATEGORY_IOS_SOFTWARE = "software_ios_news";
-    public static final String NEWS_URL_IOS_SOFTWARE= "http://4pda.ru/software/tag/programs-for-ios/";
-    public static final String NEWS_SUBCATEGORY_ANDROID_SOFTWARE= "software_android_news";
+    public static final String NEWS_URL_IOS_SOFTWARE = "http://4pda.ru/software/tag/programs-for-ios/";
+    public static final String NEWS_SUBCATEGORY_ANDROID_SOFTWARE = "software_android_news";
     public static final String NEWS_URL_ANDROID_SOFTWARE = "http://4pda.ru/software/tag/programs-for-android/";
     /*REVIEWS*/
     public static final String NEWS_SUBCATEGORY_SMARTPHONES_REVIEWS = "s_r_news";

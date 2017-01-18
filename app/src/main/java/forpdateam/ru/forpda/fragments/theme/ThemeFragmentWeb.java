@@ -141,118 +141,6 @@ public class ThemeFragmentWeb extends ThemeFragment {
         }
     }
 
-    private class ThemeWebViewClient extends WebViewClient {
-
-        @SuppressWarnings("deprecation")
-        @Override
-        public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            return handleUri(Uri.parse(url));
-        }
-
-        @TargetApi(Build.VERSION_CODES.N)
-        @Override
-        public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-            return handleUri(request.getUrl());
-        }
-
-
-        private boolean handleUri(Uri uri) {
-            Log.d("kek", "handle " + uri);
-            if (checkIsPoll(uri.toString())) return true;
-            if (uri.getHost() != null && uri.getHost().matches("4pda.ru")) {
-                if (uri.getPathSegments().get(0).equals("forum")) {
-                    String param = uri.getQueryParameter("showtopic");
-                    Log.d("kek", "param" + param);
-                    if (param != null && !param.equals(Uri.parse(getTabUrl()).getQueryParameter("showtopic"))) {
-                        load(uri);
-                        return true;
-                    }
-                    param = uri.getQueryParameter("act");
-                    if (param == null)
-                        param = uri.getQueryParameter("view");
-                    Log.d("kek", "param" + param);
-                    if (param != null && param.equals("findpost")) {
-                        String postId = uri.getQueryParameter("pid");
-                        if (postId == null)
-                            postId = uri.getQueryParameter("p");
-                        Log.d("kek", "param" + postId);
-                        if (postId != null && getPostById(Integer.parseInt(postId)) != null) {
-                            Matcher matcher = Theme.elemToScrollPattern.matcher(uri.toString());
-                            String elem = null;
-                            while (matcher.find()) {
-                                elem = matcher.group(1);
-                            }
-                            Log.d("kek", " scroll to " + postId + " : " + elem);
-                            webView.evalJs("scrollToElement(\"".concat(elem == null ? "entry" : "").concat(elem != null ? elem : postId).concat("\")"));
-                            return true;
-                        } else {
-                            load(uri);
-                            return true;
-                        }
-                    }
-                }
-            }
-            IntentHandler.handle(uri.toString());
-
-            return true;
-        }
-
-        private boolean checkIsPoll(String url) {
-            Matcher m = Pattern.compile("4pda.ru.*?addpoll=1").matcher(url);
-            if (m.find()) {
-                Uri uri = Uri.parse(url);
-                uri = uri.buildUpon()
-                        .appendQueryParameter("showtopic", Integer.toString(pageData.getId()))
-                        .appendQueryParameter("st", "" + pageData.getCurrentPage() * pageData.getPostsOnPageCount())
-                        .build();
-                load(uri);
-                return true;
-            }
-            return false;
-        }
-
-        private void load(Uri uri) {
-            action = NORMAL_ACTION;
-            setTabUrl(uri.toString());
-            loadData();
-        }
-
-        private final Pattern p = Pattern.compile("\\.(jpg|png|gif|bmp)");
-        private Matcher m = p.matcher("");
-
-        @Override
-        public void onLoadResource(WebView view, String url) {
-            super.onLoadResource(view, url);
-
-            Log.d("kek", "IThemeJ: " + url);
-            if (action == NORMAL_ACTION) {
-                if (!url.contains("style_images") && m.reset(url).find()) {
-                    webView.evalJs("onProgressChanged()");
-                }
-            }
-        }
-
-        @Override
-        public void onPageStarted(WebView view, String url, Bitmap favicon) {
-            super.onPageStarted(view, url, favicon);
-            if (action == BACK_ACTION || action == REFRESH_ACTION)
-                webView.evalJs("window.doOnLoadScroll = false");
-            if (action == BACK_ACTION)
-                webView.scrollTo(0, pageData.getScrollY());
-        }
-    }
-
-    private class ThemeChromeClient extends WebChromeClient {
-        @Override
-        public void onProgressChanged(WebView view, int progress) {
-            if (action == NORMAL_ACTION)
-                webView.evalJs("onProgressChanged()");
-            else if (action == BACK_ACTION || action == REFRESH_ACTION)
-                webView.scrollTo(0, pageData.getScrollY());
-        }
-    }
-
-
     /*
     *
     * JavaScript Interface functions
@@ -380,5 +268,115 @@ public class ThemeFragmentWeb extends ThemeFragment {
 
     public void run(final Runnable runnable) {
         getMainActivity().runOnUiThread(runnable);
+    }
+
+    private class ThemeWebViewClient extends WebViewClient {
+
+        private final Pattern p = Pattern.compile("\\.(jpg|png|gif|bmp)");
+        private Matcher m = p.matcher("");
+
+        @SuppressWarnings("deprecation")
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            return handleUri(Uri.parse(url));
+        }
+
+        @TargetApi(Build.VERSION_CODES.N)
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+            return handleUri(request.getUrl());
+        }
+
+        private boolean handleUri(Uri uri) {
+            Log.d("kek", "handle " + uri);
+            if (checkIsPoll(uri.toString())) return true;
+            if (uri.getHost() != null && uri.getHost().matches("4pda.ru")) {
+                if (uri.getPathSegments().get(0).equals("forum")) {
+                    String param = uri.getQueryParameter("showtopic");
+                    Log.d("kek", "param" + param);
+                    if (param != null && !param.equals(Uri.parse(getTabUrl()).getQueryParameter("showtopic"))) {
+                        load(uri);
+                        return true;
+                    }
+                    param = uri.getQueryParameter("act");
+                    if (param == null)
+                        param = uri.getQueryParameter("view");
+                    Log.d("kek", "param" + param);
+                    if (param != null && param.equals("findpost")) {
+                        String postId = uri.getQueryParameter("pid");
+                        if (postId == null)
+                            postId = uri.getQueryParameter("p");
+                        Log.d("kek", "param" + postId);
+                        if (postId != null && getPostById(Integer.parseInt(postId)) != null) {
+                            Matcher matcher = Theme.elemToScrollPattern.matcher(uri.toString());
+                            String elem = null;
+                            while (matcher.find()) {
+                                elem = matcher.group(1);
+                            }
+                            Log.d("kek", " scroll to " + postId + " : " + elem);
+                            webView.evalJs("scrollToElement(\"".concat(elem == null ? "entry" : "").concat(elem != null ? elem : postId).concat("\")"));
+                            return true;
+                        } else {
+                            load(uri);
+                            return true;
+                        }
+                    }
+                }
+            }
+            IntentHandler.handle(uri.toString());
+
+            return true;
+        }
+
+        private boolean checkIsPoll(String url) {
+            Matcher m = Pattern.compile("4pda.ru.*?addpoll=1").matcher(url);
+            if (m.find()) {
+                Uri uri = Uri.parse(url);
+                uri = uri.buildUpon()
+                        .appendQueryParameter("showtopic", Integer.toString(pageData.getId()))
+                        .appendQueryParameter("st", "" + pageData.getCurrentPage() * pageData.getPostsOnPageCount())
+                        .build();
+                load(uri);
+                return true;
+            }
+            return false;
+        }
+
+        private void load(Uri uri) {
+            action = NORMAL_ACTION;
+            setTabUrl(uri.toString());
+            loadData();
+        }
+
+        @Override
+        public void onLoadResource(WebView view, String url) {
+            super.onLoadResource(view, url);
+
+            Log.d("kek", "IThemeJ: " + url);
+            if (action == NORMAL_ACTION) {
+                if (!url.contains("style_images") && m.reset(url).find()) {
+                    webView.evalJs("onProgressChanged()");
+                }
+            }
+        }
+
+        @Override
+        public void onPageStarted(WebView view, String url, Bitmap favicon) {
+            super.onPageStarted(view, url, favicon);
+            if (action == BACK_ACTION || action == REFRESH_ACTION)
+                webView.evalJs("window.doOnLoadScroll = false");
+            if (action == BACK_ACTION)
+                webView.scrollTo(0, pageData.getScrollY());
+        }
+    }
+
+    private class ThemeChromeClient extends WebChromeClient {
+        @Override
+        public void onProgressChanged(WebView view, int progress) {
+            if (action == NORMAL_ACTION)
+                webView.evalJs("onProgressChanged()");
+            else if (action == BACK_ACTION || action == REFRESH_ACTION)
+                webView.scrollTo(0, pageData.getScrollY());
+        }
     }
 }

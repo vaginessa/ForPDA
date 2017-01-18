@@ -76,44 +76,6 @@ public class NewsList {
     * 7. Description */
     private static final Pattern pattern = Pattern.compile("<article[^>]*?class=\"post\"[^>]*?data-ztm=\"[^ ]+\"[^>]*>[\\s\\S]*?<a[^>]*?href=\"([^\"]*)\"[^>]*?title=\"([^\"]*?)\"[\\s\\S]*?<img[^>]*?src=\"([^\"]*?)\"[\\s\\S]*?<a[^>]*?>([^<]*?)<\\/a>[\\s\\S]*?<em[^>]*?class=\"date\"[^>]*?>([^<]*?)<\\/em>[\\s\\S]*?<a[^>]*?>([^<]*?)<\\/a>[\\s\\S]*?<div[^>]*?itemprop=\"description\">([\\s\\S]*?)<\\/div>[\\s\\S]*?<\\/article>");
 
-    public ArrayList<NewsItem> get(String url) throws Exception {
-        ArrayList<NewsItem> list = new ArrayList<>();
-        String response = Client.getInstance().get(url);
-
-        Matcher matcher = pattern.matcher(response);
-        while (matcher.find()) {
-            NewsItem item = new NewsItem();
-            item.setLink(matcher.group(1));
-            item.setTitle(matcher.group(2));
-            item.setImageUrl(matcher.group(3));
-            item.setCommentsCount(matcher.group(4));
-            item.setDate(matcher.group(5));
-            Log.e("NewsModel", "Test date: " + matcher.group(5));
-            item.setAuthor(matcher.group(6));
-            item.setDescription(matcher.group(7));
-            list.add(item);
-        }
-        return list;
-    }
-
-    public Observable<ArrayList<NewsItem>> getNews(final String url) {
-        return Observable.fromCallable(() -> get(url));
-    }
-
-    public Observable<String> getNewsSource(@NonNull String urlNews) {
-        return Observable.create(new ObservableOnSubscribe<String>() {
-            @Override
-            public void subscribe(ObservableEmitter<String> e) throws Exception {
-                if (!e.isDisposed()) {
-                    e.onNext(Client.getInstance().get(urlNews));
-                    e.onComplete();
-                }
-            }
-        });
-    }
-
-
-
     /*Experimental*/
     public static List<NewsModel> getNewsItems(@NonNull String category, int number) {
         List<NewsModel> cache = new ArrayList<>();
@@ -203,5 +165,41 @@ public class NewsList {
 
     public static String getDetailsNewsItem(@NonNull String url) throws Exception {
         return Client.getInstance().get(url);
+    }
+
+    public ArrayList<NewsItem> get(String url) throws Exception {
+        ArrayList<NewsItem> list = new ArrayList<>();
+        String response = Client.getInstance().get(url);
+
+        Matcher matcher = pattern.matcher(response);
+        while (matcher.find()) {
+            NewsItem item = new NewsItem();
+            item.setLink(matcher.group(1));
+            item.setTitle(matcher.group(2));
+            item.setImageUrl(matcher.group(3));
+            item.setCommentsCount(matcher.group(4));
+            item.setDate(matcher.group(5));
+            Log.e("NewsModel", "Test date: " + matcher.group(5));
+            item.setAuthor(matcher.group(6));
+            item.setDescription(matcher.group(7));
+            list.add(item);
+        }
+        return list;
+    }
+
+    public Observable<ArrayList<NewsItem>> getNews(final String url) {
+        return Observable.fromCallable(() -> get(url));
+    }
+
+    public Observable<String> getNewsSource(@NonNull String urlNews) {
+        return Observable.create(new ObservableOnSubscribe<String>() {
+            @Override
+            public void subscribe(ObservableEmitter<String> e) throws Exception {
+                if (!e.isDisposed()) {
+                    e.onNext(Client.getInstance().get(urlNews));
+                    e.onComplete();
+                }
+            }
+        });
     }
 }

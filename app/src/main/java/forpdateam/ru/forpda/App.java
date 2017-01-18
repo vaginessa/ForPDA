@@ -47,7 +47,7 @@ import static org.acra.ReportField.USER_COMMENT;
  */
 //acra
 @ReportsCrashes(
-        mailTo =  "ololosh100500@gmail.com",
+        mailTo = "ololosh100500@gmail.com",
         mode = ReportingInteractionMode.DIALOG,
         resDialogTheme = R.style.AlertDialog,
         resDialogIcon = R.drawable.ic_warning_gray_24dp,
@@ -55,14 +55,28 @@ import static org.acra.ReportField.USER_COMMENT;
         resDialogText = R.string.crash_notif_text,
         resDialogCommentPrompt = R.string.crash_notif_ticker_text,
         resDialogOkToast = R.string.ok,
-        customReportContent = { APP_VERSION_NAME, APP_VERSION_CODE, PHONE_MODEL, ANDROID_VERSION, USER_COMMENT, CUSTOM_DATA, STACK_TRACE, LOGCAT }
+        customReportContent = {APP_VERSION_NAME, APP_VERSION_CODE, PHONE_MODEL, ANDROID_VERSION, USER_COMMENT, CUSTOM_DATA, STACK_TRACE, LOGCAT}
 )
 public class App extends android.app.Application {
-    private static App INSTANCE = new App();
-    private SharedPreferences preferences;
-    private static int savedKeyboardHeight = 0;
     public static int keyboardHeight = 0;
     public static int statusBarHeight = 0;
+    public static HashMap<Integer, Drawable> drawableHashMap = new HashMap<>();
+    public static int px2, px4, px6, px8, px12, px14, px16, px24, px32, px36, px40, px48, px56, px64;
+    private static App INSTANCE = new App();
+    private static int savedKeyboardHeight = 0;
+    private static DisplayImageOptions.Builder options = new DisplayImageOptions.Builder()
+            .cacheInMemory(true)
+            .resetViewBeforeLoading(true)
+            .cacheOnDisc(true)
+            .bitmapConfig(Bitmap.Config.ARGB_8888)
+            .handler(new Handler())
+            .displayer(new FadeInBitmapDisplayer(500, true, true, false));
+    private SharedPreferences preferences;
+    private MiniTemplator templator;
+
+    public App() {
+        INSTANCE = this;
+    }
 
     public static int getStatusBarHeight() {
         return statusBarHeight;
@@ -86,16 +100,34 @@ public class App extends android.app.Application {
         return INSTANCE;
     }
 
-    public App() {
-        INSTANCE = this;
+    public static Drawable getAppDrawable(int id) {
+        return drawableHashMap.get(id);
     }
 
-    private MiniTemplator templator;
+    public static DisplayImageOptions.Builder getDefaultOptionsUIL() {
+        return options;
+    }
+
+    public static void initImageLoader(Context context) {
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
+                .threadPoolSize(5)
+                .threadPriority(Thread.MIN_PRIORITY)
+                .denyCacheImageMultipleSizesInMemory()
+                .memoryCache(new UsingFreqLimitedMemoryCache(5 * 1024 * 1024)) // 2 Mb
+                .discCacheFileNameGenerator(new HashCodeFileNameGenerator())
+                .defaultDisplayImageOptions(options.build())
+                .build();
+
+        ImageLoader.getInstance().init(config);
+    }
+
+    public static Context getContext() {
+        return getInstance();
+    }
 
     public MiniTemplator getTemplator() {
         return templator;
     }
-
 
     /*private final static Pattern p = Pattern.compile("(?:[^\\s\\-—.,:;&?=#@><\\{\\}\\[\\]!~`*^%$\\|\"'\\/][\\s\\S][^\\s\\-—.,:;&?=#@><\\{\\}\\[\\]!~`*^%$\\|\"'\\/]*)");
     private Matcher matcher1;
@@ -192,46 +224,9 @@ public class App extends android.app.Application {
         return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
     }
 
-    public static HashMap<Integer, Drawable> drawableHashMap = new HashMap<>();
-
-    public static Drawable getAppDrawable(int id) {
-        return drawableHashMap.get(id);
-    }
-
-    private static DisplayImageOptions.Builder options = new DisplayImageOptions.Builder()
-            .cacheInMemory(true)
-            .resetViewBeforeLoading(true)
-            .cacheOnDisc(true)
-            .bitmapConfig(Bitmap.Config.ARGB_8888)
-            .handler(new Handler())
-            .displayer(new FadeInBitmapDisplayer(500, true, true, false));
-
-    public static DisplayImageOptions.Builder getDefaultOptionsUIL() {
-        return options;
-    }
-
-    public static void initImageLoader(Context context) {
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
-                .threadPoolSize(5)
-                .threadPriority(Thread.MIN_PRIORITY)
-                .denyCacheImageMultipleSizesInMemory()
-                .memoryCache(new UsingFreqLimitedMemoryCache(5 * 1024 * 1024)) // 2 Mb
-                .discCacheFileNameGenerator(new HashCodeFileNameGenerator())
-                .defaultDisplayImageOptions(options.build())
-                .build();
-
-        ImageLoader.getInstance().init(config);
-    }
-
-    public static Context getContext() {
-        return getInstance();
-    }
-
     public SharedPreferences getPreferences() {
         if (preferences == null)
             preferences = PreferenceManager.getDefaultSharedPreferences(this);
         return preferences;
     }
-
-    public static int px2, px4, px6, px8, px12, px14, px16, px24, px32, px36, px40, px48, px56, px64;
 }

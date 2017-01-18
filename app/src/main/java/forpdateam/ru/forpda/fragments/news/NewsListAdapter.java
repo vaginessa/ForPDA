@@ -29,14 +29,6 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private OnItemLongClickListener mOnItemLongClickListener;
     private boolean mIsLoadingFooterAdded = false;
 
-    public interface OnItemClickListener {
-        void onItemClick(int position, View view);
-    }
-
-    public interface OnItemLongClickListener {
-        void onItemLongClick(int position, View view);
-    }
-
     public NewsListAdapter() {
         this.list = new RealmList<>();
     }
@@ -80,12 +72,12 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public int getItemViewType(int position) {
-        return (position == list.size()-1 && mIsLoadingFooterAdded) ? LOADING : ITEM;
+        return (position == list.size() - 1 && mIsLoadingFooterAdded) ? LOADING : ITEM;
     }
 
     private void add(NewsModel newsModel) {
         list.add(newsModel);
-        notifyItemInserted(list.size()-1);
+        notifyItemInserted(list.size() - 1);
     }
 
     public void addAll(RealmResults<NewsModel> results) {
@@ -115,7 +107,7 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return getItemCount() == 0;
     }
 
-    public void addLoading(){
+    public void addLoading() {
         mIsLoadingFooterAdded = true;
         add(new NewsModel());
     }
@@ -145,7 +137,7 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         final NewsViewHolder holder = new NewsViewHolder(v);
         holder.card.setOnClickListener(v1 -> {
             int adapterPos = holder.getAdapterPosition();
-            if(adapterPos != RecyclerView.NO_POSITION){
+            if (adapterPos != RecyclerView.NO_POSITION) {
                 if (mOnItemClickListener != null) {
                     mOnItemClickListener.onItemClick(adapterPos, holder.itemView);
                 }
@@ -157,7 +149,7 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return holder;
     }
 
-    private void bindNewsViewHolder(RecyclerView.ViewHolder viewHolder, int position){
+    private void bindNewsViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         NewsViewHolder holder = (NewsViewHolder) viewHolder;
         final NewsModel newsModel = list.get(position);
         holder.title.setText(newsModel.getTitle());
@@ -167,6 +159,14 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         ImageLoader.getInstance().displayImage(newsModel.getImgLink(), holder.pic);
     }
 
+    public interface OnItemClickListener {
+        void onItemClick(int position, View view);
+    }
+
+    public interface OnItemLongClickListener {
+        void onItemLongClick(int position, View view);
+    }
+
     private static class NewsViewHolder extends RecyclerView.ViewHolder {
 
         CardView card;
@@ -174,7 +174,7 @@ public class NewsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         TextView title;
         TextView date;
         TextView description;
-        
+
         public NewsViewHolder(View view) {
             super(view);
             card = (CardView) view.findViewById(R.id.news_list_item_root_card);

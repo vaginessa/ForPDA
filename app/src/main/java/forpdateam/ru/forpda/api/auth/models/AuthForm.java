@@ -16,60 +16,60 @@ public class AuthForm {
     private String password;
     private String body;
 
-    public void setCaptchaImageUrl(String captchaImageUrl) {
-        this.captchaImageUrl = captchaImageUrl;
+    public String getBody() {
+        return body;
     }
 
     public void setBody(String body) {
         this.body = body;
     }
 
-    public void setCaptcha(String captcha) {
-        this.captcha = captcha;
-    }
-
-    public void setCaptchaTime(String captchaTime) {
-        this.captchaTime = captchaTime;
-    }
-
-    public void setCaptchaSig(String captchaSig) {
-        this.captchaSig = captchaSig;
-    }
-
-    public void setNick(String nick) {
-        this.nick = nick;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getBody() {
-        return body;
-    }
-
     public String getCaptchaImageUrl() {
         return captchaImageUrl;
+    }
+
+    public void setCaptchaImageUrl(String captchaImageUrl) {
+        this.captchaImageUrl = captchaImageUrl;
     }
 
     public String getCaptcha() {
         return captcha;
     }
 
+    public void setCaptcha(String captcha) {
+        this.captcha = captcha;
+    }
+
     public String getCaptchaTime() {
         return captchaTime;
+    }
+
+    public void setCaptchaTime(String captchaTime) {
+        this.captchaTime = captchaTime;
     }
 
     public String getCaptchaSig() {
         return captchaSig;
     }
 
+    public void setCaptchaSig(String captchaSig) {
+        this.captchaSig = captchaSig;
+    }
+
     public String getNick() {
         return nick;
     }
 
+    public void setNick(String nick) {
+        this.nick = nick;
+    }
+
     public String getPassword() {
         return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getReturnField() {

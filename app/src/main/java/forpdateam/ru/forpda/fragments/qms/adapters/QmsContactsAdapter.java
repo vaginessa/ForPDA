@@ -25,10 +25,6 @@ public class QmsContactsAdapter extends RecyclerView.Adapter<QmsContactsAdapter.
     private OnItemClickListener itemClickListener;
     private OnLongItemClickListener longItemClickListener;
 
-    public interface OnItemClickListener {
-        void onItemClick(QmsContact contact);
-    }
-
     public void addAll(Collection<QmsContact> results) {
         addAll(results, true);
     }
@@ -48,43 +44,8 @@ public class QmsContactsAdapter extends RecyclerView.Adapter<QmsContactsAdapter.
         this.itemClickListener = mItemClickListener;
     }
 
-    public interface OnLongItemClickListener {
-        void onLongItemClick(QmsContact contact);
-    }
-
     public void setOnLongItemClickListener(final OnLongItemClickListener longItemClickListener) {
         this.longItemClickListener = longItemClickListener;
-    }
-
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
-        public ImageView avatar;
-        public TextView nick;
-        public TextView count;
-
-        public ViewHolder(View v) {
-            super(v);
-            avatar = (ImageView) v.findViewById(R.id.qms_contact_avatar);
-            nick = (TextView) v.findViewById(R.id.qms_contact_nick);
-            count = (TextView) v.findViewById(R.id.qms_contact_count);
-            v.setOnClickListener(this);
-            v.setOnLongClickListener(this);
-        }
-
-        @Override
-        public void onClick(View view) {
-            if (itemClickListener != null) {
-                itemClickListener.onItemClick(getItem(getLayoutPosition()));
-            }
-        }
-
-        @Override
-        public boolean onLongClick(View view) {
-            if (longItemClickListener != null) {
-                longItemClickListener.onLongItemClick(getItem(getLayoutPosition()));
-                return true;
-            }
-            return false;
-        }
     }
 
     @Override
@@ -119,5 +80,44 @@ public class QmsContactsAdapter extends RecyclerView.Adapter<QmsContactsAdapter.
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(QmsContact contact);
+    }
+
+    public interface OnLongItemClickListener {
+        void onLongItemClick(QmsContact contact);
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
+        public ImageView avatar;
+        public TextView nick;
+        public TextView count;
+
+        public ViewHolder(View v) {
+            super(v);
+            avatar = (ImageView) v.findViewById(R.id.qms_contact_avatar);
+            nick = (TextView) v.findViewById(R.id.qms_contact_nick);
+            count = (TextView) v.findViewById(R.id.qms_contact_count);
+            v.setOnClickListener(this);
+            v.setOnLongClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            if (itemClickListener != null) {
+                itemClickListener.onItemClick(getItem(getLayoutPosition()));
+            }
+        }
+
+        @Override
+        public boolean onLongClick(View view) {
+            if (longItemClickListener != null) {
+                longItemClickListener.onLongItemClick(getItem(getLayoutPosition()));
+                return true;
+            }
+            return false;
+        }
     }
 }

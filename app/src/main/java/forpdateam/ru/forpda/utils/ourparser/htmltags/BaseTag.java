@@ -17,13 +17,13 @@ import forpdateam.ru.forpda.utils.ourparser.LinkMovementMethod;
  * Created by radiationx on 28.08.16.
  */
 public class BaseTag extends LinearLayout {
-    protected float size() {
-        return 16;
-    }
-
     public BaseTag(Context context) {
         super(context);
         setOrientation(VERTICAL);
+    }
+
+    protected float size() {
+        return 16;
     }
 
     public TextView setHtmlText(String text) {
@@ -36,6 +36,18 @@ public class BaseTag extends LinearLayout {
         textView.setMovementMethod(LinkMovementMethod.getInstance());
         addView(textView);
         return textView;
+    }
+
+    public void setImage(String url) {
+        ImageView imageView = new ImageView(getContext());
+        ImageLoader.getInstance().displayImage(url, imageView);
+        LayoutParams params = new LayoutParams(
+                LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+        params.setMargins(0, App.px8, 0, App.px8);
+        imageView.setLayoutParams(params);
+        imageView.setAdjustViewBounds(true);
+        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        addView(imageView);
     }
 
     private class FormatTextTask extends AsyncTask<Void, Void, Void> {
@@ -56,24 +68,12 @@ public class BaseTag extends LinearLayout {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            if (textView != null){
+            if (textView != null) {
                 textView.setText(spanned);
-                if(spanned.toString().isEmpty()){
+                if (spanned.toString().isEmpty()) {
                     textView.setVisibility(GONE);
                 }
             }
         }
-    }
-
-    public void setImage(String url) {
-        ImageView imageView = new ImageView(getContext());
-        ImageLoader.getInstance().displayImage(url, imageView);
-        LayoutParams params = new LayoutParams(
-                LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-        params.setMargins(0, App.px8, 0, App.px8);
-        imageView.setLayoutParams(params);
-        imageView.setAdjustViewBounds(true);
-        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        addView(imageView);
     }
 }

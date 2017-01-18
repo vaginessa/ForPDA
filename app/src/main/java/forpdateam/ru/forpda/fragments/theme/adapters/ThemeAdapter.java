@@ -37,32 +37,18 @@ import forpdateam.ru.forpda.utils.ourparser.htmltags.UlTag;
  */
 
 public class ThemeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private final static Pattern p2 = Pattern.compile("^(b|i|u|del|s|strike|sub|sup|span|a|br)$");
+    private final static Pattern startBreakTag = Pattern.compile("^([ ]*|)<br>");
+    private final static Pattern endBreakTag = Pattern.compile("<br>([ ]*|)$");
     private List<ThemePost> postList;
     private Context context;
+    private HashMap<Integer, BaseTag> createdTrees = new HashMap<>();
 
-    public class MessageViewHolder extends RecyclerView.ViewHolder {
-        public ImageView avatar;
-        public TextView nick;
-        public TextView group;
-        public TextView date;
-        public LinearLayout root;
-
-        public MessageViewHolder(View v) {
-            super(v);
-            avatar = (ImageView) v.findViewById(R.id.avatar);
-            nick = (TextView) v.findViewById(R.id.nick);
-            group = (TextView) v.findViewById(R.id.group);
-            date = (TextView) v.findViewById(R.id.date);
-            root = (LinearLayout) v.findViewById(R.id.content);
-        }
-
-    }
 
     public ThemeAdapter(List<ThemePost> chatItems, Context context) {
         this.postList = chatItems;
         this.context = context;
     }
-
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -74,7 +60,6 @@ public class ThemeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         bindMessageHolder((ThemeAdapter.MessageViewHolder) holder, position);
     }
-
 
     private void bindMessageHolder(ThemeAdapter.MessageViewHolder holder, int position) {
         ThemePost item = postList.get(position);
@@ -104,8 +89,6 @@ public class ThemeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         ImageLoader.getInstance().displayImage("http://s.4pda.to/forum/uploads/" + item.getAvatar(), holder.avatar);
     }
 
-    private HashMap<Integer, BaseTag> createdTrees = new HashMap<>();
-
     @Override
     public int getItemCount() {
         return postList.size();
@@ -119,8 +102,6 @@ public class ThemeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
     }
-
-    private final static Pattern p2 = Pattern.compile("^(b|i|u|del|s|strike|sub|sup|span|a|br)$");
 
     private BaseTag recurseUi(final Element element) {
         BaseTag thisView = null;
@@ -213,9 +194,6 @@ public class ThemeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         return thisView;
     }
 
-    private final static Pattern startBreakTag = Pattern.compile("^([ ]*|)<br>");
-    private final static Pattern endBreakTag = Pattern.compile("<br>([ ]*|)$");
-
     private BaseTag getViewByTag(String tag) {
         switch (tag) {
             case "h1":
@@ -233,5 +211,23 @@ public class ThemeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     public Context getContext() {
         return context;
+    }
+
+    public class MessageViewHolder extends RecyclerView.ViewHolder {
+        public ImageView avatar;
+        public TextView nick;
+        public TextView group;
+        public TextView date;
+        public LinearLayout root;
+
+        public MessageViewHolder(View v) {
+            super(v);
+            avatar = (ImageView) v.findViewById(R.id.avatar);
+            nick = (TextView) v.findViewById(R.id.nick);
+            group = (TextView) v.findViewById(R.id.group);
+            date = (TextView) v.findViewById(R.id.date);
+            root = (LinearLayout) v.findViewById(R.id.content);
+        }
+
     }
 }

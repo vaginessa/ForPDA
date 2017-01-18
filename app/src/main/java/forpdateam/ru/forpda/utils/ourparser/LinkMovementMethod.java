@@ -23,6 +23,15 @@ public class LinkMovementMethod extends ScrollingMovementMethod {
     private static final int CLICK = 1;
     private static final int UP = 2;
     private static final int DOWN = 3;
+    private static LinkMovementMethod sInstance;
+    private static Object FROM_BELOW = new NoCopySpan.Concrete();
+
+    public static MovementMethod getInstance() {
+        if (sInstance == null)
+            sInstance = new LinkMovementMethod();
+
+        return sInstance;
+    }
 
     @Override
     public boolean canSelectArbitrarily() {
@@ -235,15 +244,5 @@ public class LinkMovementMethod extends ScrollingMovementMethod {
             text.removeSpan(FROM_BELOW);
         }
     }
-
-    public static MovementMethod getInstance() {
-        if (sInstance == null)
-            sInstance = new LinkMovementMethod();
-
-        return sInstance;
-    }
-
-    private static LinkMovementMethod sInstance;
-    private static Object FROM_BELOW = new NoCopySpan.Concrete();
 }
 

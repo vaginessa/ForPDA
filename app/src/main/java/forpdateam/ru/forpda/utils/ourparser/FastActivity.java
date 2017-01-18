@@ -32,19 +32,18 @@ import okhttp3.Response;
 public class FastActivity extends AppCompatActivity {
 
 
-
-
     private final static int green = Color.argb(48, 0, 255, 0);
     private final static int red = Color.argb(48, 255, 0, 0);
     private final static int blue = Color.argb(255, 0, 0, 255);
+    private final static Pattern p2 = Pattern.compile("^(b|i|u|del|sub|sup|span|a|br)$");
     private final OkHttpClient client = new OkHttpClient();
-
+    int iterations = 0;
+    float coef = 1;
     private int iViews = 0;
     private int iTextViews = 0;
-    int iterations = 0;
-
-
     private LinearLayout list;
+    private Pattern pattern = Pattern.compile("(<div class=\"article-entry\"[^>]*?>[\\s\\S]*?</div>)[^<]*?<footer");
+    private Matcher matcher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,10 +57,6 @@ public class FastActivity extends AppCompatActivity {
         }
         //_getFav(html);
     }
-
-    private Pattern pattern = Pattern.compile("(<div class=\"article-entry\"[^>]*?>[\\s\\S]*?</div>)[^<]*?<footer");
-
-    float coef = 1;
 
     private void parse(String html) {
         //coef = 8.2f;
@@ -98,10 +93,6 @@ public class FastActivity extends AppCompatActivity {
 
         }
     }
-
-
-    private final static Pattern p2 = Pattern.compile("^(b|i|u|del|sub|sup|span|a|br)$");
-    private Matcher matcher;
 
     private BaseTag recurseUi(final Element element) {
         //Log.d("kek", "element "+element.tagName()+" : "+element.getLevel());

@@ -87,28 +87,28 @@ public class Element {
         return attributes;
     }
 
-    public void setText(String text) {
-        this.text = text;
-    }
-
     public String getText() {
         return text;
     }
 
-    public void setAfterText(String afterText) {
-        this.afterText = afterText;
+    public void setText(String text) {
+        this.text = text;
     }
 
     public String getAfterText() {
         return afterText;
     }
 
-    public void setParent(Element parent) {
-        this.parent = parent;
+    public void setAfterText(String afterText) {
+        this.afterText = afterText;
     }
 
     public Element getParent() {
         return parent;
+    }
+
+    public void setParent(Element parent) {
+        this.parent = parent;
     }
 
     public String html() {

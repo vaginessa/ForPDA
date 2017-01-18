@@ -14,7 +14,7 @@ public class CodePostBlock extends PostBlock {
         super(context);
         setBackgroundResource(R.drawable.post_block_code_bg);
         HorizontalScrollView horizontalScrollView = new HorizontalScrollView(getContext());
-        ((ViewGroup)blockBody.getParent()).removeView(blockBody);
+        ((ViewGroup) blockBody.getParent()).removeView(blockBody);
         horizontalScrollView.addView(blockBody);
         addView(horizontalScrollView);
     }

@@ -42,10 +42,13 @@ public class EditPostFragment extends TabFragment {
     private final static String ARG_TOPIC_ID = "topicId";
     private final static String ARG_POST_ID = "postId";
     private final static String ARG_ST = "st";
-
+    private static final int PICK_IMAGE = 1228;
     private final EditPostForm postForm = new EditPostForm();
     private MessagePanel messagePanel;
-
+    private AttachmentsPopup attachmentsPopup;
+    private Subscriber<ThemePage> sendSubscriber = new Subscriber<>();
+    private Subscriber<EditPostForm> formSubscriber = new Subscriber<>();
+    private Subscriber<List<AttachmentItem>> attachmentSubscriber = new Subscriber<>();
 
     public static EditPostFragment newInstance(int postId, int topicId, int forumId, int st) {
         Bundle args = new Bundle();
@@ -150,11 +153,6 @@ public class EditPostFragment extends TabFragment {
         messagePanel.hidePopupWindows();
     }
 
-    private AttachmentsPopup attachmentsPopup;
-    private Subscriber<ThemePage> sendSubscriber = new Subscriber<>();
-    private Subscriber<EditPostForm> formSubscriber = new Subscriber<>();
-    private Subscriber<List<AttachmentItem>> attachmentSubscriber = new Subscriber<>();
-
     private void sendMessage() {
         messagePanel.setProgressState(true);
         postForm.setMessage(messagePanel.getMessage());
@@ -197,8 +195,6 @@ public class EditPostFragment extends TabFragment {
         List<AttachmentItem> selectedFiles = attachmentsPopup.getSelected();
         attachmentSubscriber.subscribe(Api.EditPost().deleteFiles(postForm.getPostId(), selectedFiles), item -> attachmentsPopup.onDeleteFiles(item), selectedFiles, null);
     }
-
-    private static final int PICK_IMAGE = 1228;
 
     public void pickImage() {
         startActivityForResult(FilePickHelper.pickImage(PICK_IMAGE), PICK_IMAGE);

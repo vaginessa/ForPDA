@@ -11,28 +11,33 @@ import java.util.regex.Pattern;
  */
 
 public class AttachmentItem implements Parcelable {
-    private final static Pattern imageTypes = Pattern.compile("gif|jpg|jpeg|png", Pattern.CASE_INSENSITIVE);
     public final static int TYPE_FILE = 0;
     public final static int TYPE_IMAGE = 1;
-
     public final static int STATE_NOT_LOADED = 0;
     public final static int STATE_LOADING = 1;
     public final static int STATE_LOADED = 2;
-
     public final static int STATUS_REMOVED = 0;
     public final static int STATUS_NO_FILE = 1;
     public final static int STATUS_UPLOADED = 2;
     public final static int STATUS_READY = 3;
     public final static int STATUS_UNKNOWN = 4;
+    public static final Parcelable.Creator<AttachmentItem> CREATOR = new Parcelable.Creator<AttachmentItem>() {
+        public AttachmentItem createFromParcel(Parcel in) {
+            Log.d("SUKA", "createFromParcel");
+            return new AttachmentItem(in);
+        }
 
+        public AttachmentItem[] newArray(int size) {
+            return new AttachmentItem[size];
+        }
+    };
+    private final static Pattern imageTypes = Pattern.compile("gif|jpg|jpeg|png", Pattern.CASE_INSENSITIVE);
     private boolean isError = false;
     private boolean selected = false;
-
     private int id = -1;
     private int typeFile = TYPE_FILE;
     private int loadState = STATE_LOADING;
     private int status = STATUS_READY;
-
     private String name;
     private String format;
     private String weight;
@@ -43,6 +48,19 @@ public class AttachmentItem implements Parcelable {
     }
 
     public AttachmentItem() {
+    }
+
+    private AttachmentItem(Parcel parcel) {
+        isError = parcel.readByte() != 0;
+        selected = parcel.readByte() != 0;
+        id = parcel.readInt();
+        typeFile = parcel.readInt();
+        loadState = parcel.readInt();
+        status = parcel.readInt();
+        name = readStringFromParcel(parcel);
+        format = readStringFromParcel(parcel);
+        weight = readStringFromParcel(parcel);
+        imageUrl = readStringFromParcel(parcel);
     }
 
     public boolean isSelected() {
@@ -111,12 +129,12 @@ public class AttachmentItem implements Parcelable {
         this.imageUrl = imageUrl;
     }
 
-    public void setError(boolean error) {
-        isError = error;
-    }
-
     public boolean isError() {
         return isError;
+    }
+
+    public void setError(boolean error) {
+        isError = error;
     }
 
     public int getStatus() {
@@ -144,30 +162,6 @@ public class AttachmentItem implements Parcelable {
         writeStringToParcel(parcel, format);
         writeStringToParcel(parcel, weight);
         writeStringToParcel(parcel, imageUrl);
-    }
-
-    public static final Parcelable.Creator<AttachmentItem> CREATOR = new Parcelable.Creator<AttachmentItem>() {
-        public AttachmentItem createFromParcel(Parcel in) {
-            Log.d("SUKA", "createFromParcel");
-            return new AttachmentItem(in);
-        }
-
-        public AttachmentItem[] newArray(int size) {
-            return new AttachmentItem[size];
-        }
-    };
-
-    private AttachmentItem(Parcel parcel) {
-        isError = parcel.readByte() != 0;
-        selected = parcel.readByte() != 0;
-        id = parcel.readInt();
-        typeFile = parcel.readInt();
-        loadState = parcel.readInt();
-        status = parcel.readInt();
-        name = readStringFromParcel(parcel);
-        format = readStringFromParcel(parcel);
-        weight = readStringFromParcel(parcel);
-        imageUrl = readStringFromParcel(parcel);
     }
 
     private void writeStringToParcel(Parcel parcel, String string) {

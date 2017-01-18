@@ -22,14 +22,18 @@ import forpdateam.ru.forpda.utils.permission.RxPermissions;
 
 public class MainActivity extends AppCompatActivity implements TabManager.TabListener {
     public final static String DEF_TITLE = "ForPDA";
+    private final View.OnClickListener removeTabListener = view -> backHandler(true);
     private Queue<ExtendedWebView> webViews = new LinkedList<>();
     private Timer webViewCleaner = new Timer();
     private TabDrawer tabDrawer;
     private MenuDrawer menuDrawer;
     private final View.OnClickListener toggleListener = view -> menuDrawer.toggleState();
-    private final View.OnClickListener removeTabListener = view -> backHandler(true);
+    private NetworkStateReceiver receiver;
 
-
+    public MainActivity() {
+        webViewCleaner.schedule(new WebViewCleanerTask(), 0, 60000);
+        TabManager.init(this, this);
+    }
 
     public View.OnClickListener getToggleListener() {
         return toggleListener;
@@ -38,13 +42,6 @@ public class MainActivity extends AppCompatActivity implements TabManager.TabLis
     public View.OnClickListener getRemoveTabListener() {
         return removeTabListener;
     }
-
-    public MainActivity() {
-        webViewCleaner.schedule(new WebViewCleanerTask(), 0, 60000);
-        TabManager.init(this, this);
-    }
-
-    private NetworkStateReceiver receiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,6 +137,7 @@ public class MainActivity extends AppCompatActivity implements TabManager.TabLis
             ((InputMethodManager) MainActivity.this.getSystemService(Activity.INPUT_METHOD_SERVICE))
                     .hideSoftInputFromWindow(MainActivity.this.getCurrentFocus().getWindowToken(), 0);
     }
+
     public void showKeyboard(View view) {
         if (MainActivity.this.getCurrentFocus() != null)
             ((InputMethodManager) MainActivity.this.getSystemService(Activity.INPUT_METHOD_SERVICE))

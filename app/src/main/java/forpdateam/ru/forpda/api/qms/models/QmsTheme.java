@@ -20,9 +20,17 @@ public class QmsTheme extends RealmObject implements IQmsTheme {
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     @Override
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
@@ -30,30 +38,22 @@ public class QmsTheme extends RealmObject implements IQmsTheme {
         return date;
     }
 
+    public void setDate(String date) {
+        this.date = date;
+    }
+
     @Override
     public int getCountMessages() {
         return countMessages;
     }
 
+    public void setCountMessages(int countMessages) {
+        this.countMessages = countMessages;
+    }
+
     @Override
     public int getCountNew() {
         return countNew;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public void setCountMessages(int countMessages) {
-        this.countMessages = countMessages;
     }
 
     public void setCountNew(int countNew) {

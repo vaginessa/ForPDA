@@ -15,6 +15,8 @@ import android.webkit.WebView;
  */
 
 public class ExtendedWebView extends NestedWebView {
+    private OnStartActionModeListener actionModeListener;
+
     public ExtendedWebView(Context context) {
         super(context);
     }
@@ -33,12 +35,6 @@ public class ExtendedWebView extends NestedWebView {
             evaluateJavascript(js, null);
         else
             loadUrl("javascript:" + js);
-    }
-
-    private OnStartActionModeListener actionModeListener;
-
-    public interface OnStartActionModeListener {
-        void OnStart(ActionMode actionMode, ActionMode.Callback callback, int type);
     }
 
     public void setActionModeListener(OnStartActionModeListener actionModeListener) {
@@ -79,5 +75,9 @@ public class ExtendedWebView extends NestedWebView {
             DialogsHelper.handleContextMenu(getContext(), result.getType(), result.getExtra(), (String) msg.getData().get("url"));
             return true;
         }).obtainMessage());
+    }
+
+    public interface OnStartActionModeListener {
+        void OnStart(ActionMode actionMode, ActionMode.Callback callback, int type);
     }
 }

@@ -14,9 +14,10 @@ import android.webkit.WebView;
  */
 
 public class NestedWebView extends WebView implements NestedScrollingChild {
-    private int mLastY;
     private final int[] mScrollOffset = new int[2];
     private final int[] mScrollConsumed = new int[2];
+    boolean nestedScrolled = false;
+    private int mLastY;
     private int mNestedOffsetY;
     private NestedScrollingChildHelper mChildHelper;
 
@@ -34,7 +35,6 @@ public class NestedWebView extends WebView implements NestedScrollingChild {
         setNestedScrollingEnabled(true);
     }
 
-    boolean nestedScrolled = false;
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         boolean returnValue = false;
@@ -64,7 +64,7 @@ public class NestedWebView extends WebView implements NestedScrollingChild {
                     mNestedOffsetY = mScrollOffset[1];
                     mLastY -= deltaY;
                     nestedScrolled = true;
-                }else {
+                } else {
                     nestedScrolled = false;
                 }
 
@@ -85,15 +85,15 @@ public class NestedWebView extends WebView implements NestedScrollingChild {
         return returnValue;
     }
 
+    @Override
+    public boolean isNestedScrollingEnabled() {
+        return mChildHelper.isNestedScrollingEnabled();
+    }
+
     // Nested Scroll implements
     @Override
     public void setNestedScrollingEnabled(boolean enabled) {
         mChildHelper.setNestedScrollingEnabled(enabled);
-    }
-
-    @Override
-    public boolean isNestedScrollingEnabled() {
-        return mChildHelper.isNestedScrollingEnabled();
     }
 
     @Override

@@ -39,23 +39,20 @@ public class RxPermissions {
     public static final String TAG = "RxPermissions";
     static final Object TRIGGER = new Object();
     static RxPermissions sSingleton;
+    private Context mCtx;
+    // Contains all the current permission requests.
+    // Once granted or denied, they are removed from it.
+    private Map<String, PublishSubject<Permission>> mSubjects = new HashMap<>();
+    private boolean mLogging;
+    RxPermissions(Context ctx) {
+        mCtx = ctx;
+    }
 
     public static RxPermissions getInstance(Context ctx) {
         if (sSingleton == null) {
             sSingleton = new RxPermissions(ctx.getApplicationContext());
         }
         return sSingleton;
-    }
-
-    private Context mCtx;
-
-    // Contains all the current permission requests.
-    // Once granted or denied, they are removed from it.
-    private Map<String, PublishSubject<Permission>> mSubjects = new HashMap<>();
-    private boolean mLogging;
-
-    RxPermissions(Context ctx) {
-        mCtx = ctx;
     }
 
     public void setLogging(boolean logging) {

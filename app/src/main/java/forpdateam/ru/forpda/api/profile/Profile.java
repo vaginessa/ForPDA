@@ -29,6 +29,10 @@ public class Profile implements IProfileApi {
     private static final Pattern note = Pattern.compile("<textarea[^>]*?profile-textarea\"[^>]*?>([\\s\\S]*?)</textarea>");
     private static final Pattern about = Pattern.compile("<div[^>]*?div-custom-about[^>]*?>([\\s\\S]*?)</div>");
 
+    private static String safe(String s) {
+        return s == null ? null : s.trim();
+    }
+
     private ProfileModel parse(String url) throws Exception {
         ProfileModel profile = new ProfileModel();
         final String response = Client.getInstance().get(url);
@@ -112,10 +116,6 @@ public class Profile implements IProfileApi {
             }
         }
         return profile;
-    }
-
-    private static String safe(String s) {
-        return s == null ? null : s.trim();
     }
 
     private boolean saveNote(String note) throws Exception {

@@ -17,20 +17,11 @@ import io.reactivex.Observable;
  */
 
 public class Favorites {
+    public final static String[] SUB_TYPES = {"none", "delayed", "immediate", "daily", "weekly", "pinned"};
+    public final static CharSequence[] SUB_NAMES = {"Не уведомлять", "Первый раз", "Каждый раз", "Каждый день", "Каждую неделю", "При изменении первого поста"};
     private final static Pattern mainPattern = Pattern.compile("<div data-item-fid=\"([^\"]*)\" data-item-track=\"([^\"]*)\" data-item-pin=\"([^\"]*)\">[\\s\\S]*?class=\"modifier\">(<font color=\"([^\"]*)\">|)([^< ]*)(<\\/font>|)<\\/span><a href=\"[^\"]*=(\\d*)[^\"]*?\"[^>]*?>(<strong>|)([^<]*)(<\\/strong>|)<\\/a>[\\s\\S]*?(<a href=\"[^\"]*=(\\d*)\">\\((\\d*?)\\)[^<]*?<\\/a>|)<\\/div>[\\s\\S]*?topic_desc\">([^<]*|)(<br[^>]*>|)[\\s\\S]*?showforum=([^\"]*?)\">([^<]*)<\\/a><br[^>]*>[\\s\\S]*?showuser=([^\"]*)\">([^<]*)<\\/a>[\\s\\S]*?showuser=([^\"]*)\">([^<]*)<\\/a> ([^<]*?)<");
     private final static Pattern checkPattern = Pattern.compile("<div style=\"[^\"]*background:#dff0d8[^\"]*\">[\\s\\S]*<div id=\"navstrip");
     private final static String url = "http://4pda.ru/forum/index.php?act=fav";
-    public final static String[] SUB_TYPES = {"none", "delayed", "immediate", "daily", "weekly", "pinned"};
-    public final static CharSequence[] SUB_NAMES = {"Не уведомлять", "Первый раз", "Каждый раз", "Каждый день", "Каждую неделю", "При изменении первого поста"};
-
-    public static class SubTypes {
-        public final static String NONE = "none";
-        public final static String DELAYED = "delayed";
-        public final static String IMMEDIATE = "immediate";
-        public final static String DAILY = "daily";
-        public final static String WEEKLY = "weekly";
-        public final static String PINNED = "pinned";
-    }
 
     private FavData _getFav() throws Exception {
         FavData favData = new FavData();
@@ -109,5 +100,14 @@ public class Favorites {
             default:
                 return Observable.just(false);
         }
+    }
+
+    public static class SubTypes {
+        public final static String NONE = "none";
+        public final static String DELAYED = "delayed";
+        public final static String IMMEDIATE = "immediate";
+        public final static String DAILY = "daily";
+        public final static String WEEKLY = "weekly";
+        public final static String PINNED = "pinned";
     }
 }

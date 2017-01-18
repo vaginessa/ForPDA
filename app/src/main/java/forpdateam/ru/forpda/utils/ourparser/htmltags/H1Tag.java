@@ -10,17 +10,17 @@ import forpdateam.ru.forpda.App;
  * Created by radiationx on 03.09.16.
  */
 public class H1Tag extends BaseTag {
-    @Override
-    protected float size() {
-        return super.size() * 2f;
-    }
-
     public H1Tag(Context context) {
         super(context);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        params.setMargins(0, App.px32,0, App.px32);
+        params.setMargins(0, App.px32, 0, App.px32);
         setLayoutParams(params);
         setGravity(Gravity.CENTER_HORIZONTAL);
+    }
+
+    @Override
+    protected float size() {
+        return super.size() * 2f;
     }
 }

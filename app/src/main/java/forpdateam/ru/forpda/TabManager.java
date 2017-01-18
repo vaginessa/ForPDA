@@ -14,25 +14,21 @@ import java.util.List;
 import forpdateam.ru.forpda.fragments.TabFragment;
 
 public class TabManager {
-    private static TabManager instance;
     private final static int containerViewId = R.id.fragments_container;
     private final static String prefix = "tab_";
     private final static String bundlePrefix = "tab_manager_";
+    private static TabManager instance;
+    private static String activeTag = "";
+    private static int activeIndex = 0;
     private FragmentManager fragmentManager;
     private TabListener tabListener;
     private int count = 0;
-    private static String activeTag = "";
-    private static int activeIndex = 0;
     private List<TabFragment> existingFragments = new ArrayList<>();
 
-    public interface TabListener {
-        void onAddTab(TabFragment fragment);
-
-        void onRemoveTab(TabFragment fragment);
-
-        void onSelectTab(TabFragment fragment);
-
-        void onChange();
+    public TabManager(AppCompatActivity activity, TabListener listener) {
+        fragmentManager = activity.getSupportFragmentManager();
+        tabListener = listener;
+        update();
     }
 
     public static TabManager init(AppCompatActivity activity, TabListener listener) {
@@ -47,10 +43,12 @@ public class TabManager {
         return instance;
     }
 
-    public TabManager(AppCompatActivity activity, TabListener listener) {
-        fragmentManager = activity.getSupportFragmentManager();
-        tabListener = listener;
-        update();
+    public static String getActiveTag() {
+        return activeTag;
+    }
+
+    public static int getActiveIndex() {
+        return activeIndex;
     }
 
     public void saveState(Bundle outState) {
@@ -67,14 +65,6 @@ public class TabManager {
 
     public int getSize() {
         return existingFragments.size();
-    }
-
-    public static String getActiveTag() {
-        return activeTag;
-    }
-
-    public static int getActiveIndex() {
-        return activeIndex;
     }
 
     public List<TabFragment> getFragments() {
@@ -97,7 +87,7 @@ public class TabManager {
                 .forEach(fragment -> {
                     transaction.hide(fragment);
                     fragment.onPause();
-        });
+                });
     }
 
     private TabFragment findTabByTag(String tag) {
@@ -124,14 +114,13 @@ public class TabManager {
         if (tabFragment == null)
             return;
         String check;
-        if (tabFragment.isAlone()){
+        if (tabFragment.isAlone()) {
             check = getTagContainClass(tabFragment.getClass());
-        }
-        else{
+        } else {
             check = getTagByUID(tabFragment.getUID());
 
         }
-        Log.d("kek", "add ID "+tabFragment.getUID() );
+        Log.d("kek", "add ID " + tabFragment.getUID());
 
         if (check != null) {
             select(check);
@@ -216,5 +205,15 @@ public class TabManager {
         activeIndex = existingFragments.indexOf(tabFragment);
         tabListener.onChange();
         tabListener.onSelectTab(tabFragment);
+    }
+
+    public interface TabListener {
+        void onAddTab(TabFragment fragment);
+
+        void onRemoveTab(TabFragment fragment);
+
+        void onSelectTab(TabFragment fragment);
+
+        void onChange();
     }
 }

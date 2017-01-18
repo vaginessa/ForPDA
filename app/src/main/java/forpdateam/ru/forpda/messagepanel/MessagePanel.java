@@ -29,6 +29,7 @@ import forpdateam.ru.forpda.utils.SimpleTextWatcher;
 
 @SuppressLint("ViewConstructor")
 public class MessagePanel extends CardView {
+    public int primaryColor = Color.parseColor("#0277bd");
     private ImageButton advancedButton, attachmentsButton, sendButton;
     private List<View.OnClickListener> advancedListeners = new ArrayList<>(), attachmentsListeners = new ArrayList<>(), sendListeners = new ArrayList<>();
     private EditText messageField;
@@ -39,7 +40,6 @@ public class MessagePanel extends CardView {
     private ProgressBar sendProgress;
     private int lastHeight = 0;
     private HeightChangeListener heightChangeListener;
-    public int primaryColor = Color.parseColor("#0277bd");
     private boolean fullForm = false;
 
     public MessagePanel(Context context, ViewGroup fragmentContainer, ViewGroup targetContainer, boolean fullForm) {
@@ -201,10 +201,6 @@ public class MessagePanel extends CardView {
         return fragmentContainer;
     }
 
-    public interface HeightChangeListener {
-        void onChangedHeight(int newHeight);
-    }
-
     public void setHeightChangeListener(HeightChangeListener heightChangeListener) {
         this.heightChangeListener = heightChangeListener;
     }
@@ -231,5 +227,9 @@ public class MessagePanel extends CardView {
     public void hidePopupWindows() {
         if (advancedPopup != null)
             advancedPopup.hidePopupWindows();
+    }
+
+    public interface HeightChangeListener {
+        void onChangedHeight(int newHeight);
     }
 }

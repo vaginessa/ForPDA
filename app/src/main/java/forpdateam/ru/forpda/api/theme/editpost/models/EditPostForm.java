@@ -19,17 +19,12 @@ public class EditPostForm {
     public EditPostForm() {
     }
 
-
-    public void setType(int type) {
-        this.type = type;
-    }
-
     public int getType() {
         return type;
     }
 
-    public void setAttachments(ArrayList<AttachmentItem> attachments) {
-        this.attachments = attachments;
+    public void setType(int type) {
+        this.type = type;
     }
 
     public String getMessage() {
@@ -78,6 +73,10 @@ public class EditPostForm {
 
     public ArrayList<AttachmentItem> getAttachments() {
         return attachments;
+    }
+
+    public void setAttachments(ArrayList<AttachmentItem> attachments) {
+        this.attachments = attachments;
     }
 
     public String getEditReason() {

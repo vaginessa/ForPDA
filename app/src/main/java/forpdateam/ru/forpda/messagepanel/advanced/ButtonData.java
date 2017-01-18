@@ -11,10 +11,6 @@ public class ButtonData {
     private int iconRes;
     private ClickListener listener;
 
-    interface ClickListener {
-        void onClick(ButtonData data);
-    }
-
     public ButtonData(String text, String icon) {
         this.text = text;
         this.icon = icon;
@@ -41,5 +37,9 @@ public class ButtonData {
 
     public int getIconRes() {
         return iconRes;
+    }
+
+    interface ClickListener {
+        void onClick(ButtonData data);
     }
 }

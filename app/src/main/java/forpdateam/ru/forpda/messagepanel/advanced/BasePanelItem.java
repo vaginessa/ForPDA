@@ -14,9 +14,9 @@ import forpdateam.ru.forpda.messagepanel.MessagePanel;
 
 @SuppressLint("ViewConstructor")
 public class BasePanelItem extends FrameLayout {
-    private String title;
     protected MessagePanel messagePanel;
     protected RecyclerView recyclerView;
+    private String title;
 
     public BasePanelItem(Context context, MessagePanel messagePanel, String title) {
         super(context);

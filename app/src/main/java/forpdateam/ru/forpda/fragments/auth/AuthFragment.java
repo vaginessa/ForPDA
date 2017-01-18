@@ -81,19 +81,6 @@ public class AuthFragment extends TabFragment {
         return view;
     }
 
-    private class MyTW extends SimpleTextWatcher {
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if (!nick.getText().toString().isEmpty() && !password.getText().toString().isEmpty() && captcha.getText().toString().length() == 4) {
-                if (!send.isEnabled())
-                    send.setEnabled(true);
-            } else {
-                if (send.isEnabled())
-                    send.setEnabled(false);
-            }
-        }
-    }
-
     @Override
     public void loadData() {
         mainSubscriber.subscribe(Api.Auth().getForm(), this::onLoadForm, new AuthForm(), view1 -> loadData());
@@ -179,5 +166,18 @@ public class AuthFragment extends TabFragment {
             Api.Auth().doOnLogin();
             TabManager.getInstance().remove(getTag());
         }, 2500);
+    }
+
+    private class MyTW extends SimpleTextWatcher {
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            if (!nick.getText().toString().isEmpty() && !password.getText().toString().isEmpty() && captcha.getText().toString().length() == 4) {
+                if (!send.isEnabled())
+                    send.setEnabled(true);
+            } else {
+                if (send.isEnabled())
+                    send.setEnabled(false);
+            }
+        }
     }
 }

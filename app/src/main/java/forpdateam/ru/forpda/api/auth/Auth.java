@@ -29,17 +29,18 @@ public class Auth {
         return userId;
     }
 
-    public int getUserIdInt() {
-        return userIdInt;
-    }
-
     public void setUserId(String userId1) {
         userId = userId1;
-        Log.d("kek", "userid 1: "+ userId1);
-        try{
+        Log.d("kek", "userid 1: " + userId1);
+        try {
             if (userId1 != null)
                 userIdInt = Integer.parseInt(userId1);
-        }catch (NumberFormatException ignore){}
+        } catch (NumberFormatException ignore) {
+        }
+    }
+
+    public int getUserIdInt() {
+        return userIdInt;
     }
 
     public Observable<AuthForm> getForm() {

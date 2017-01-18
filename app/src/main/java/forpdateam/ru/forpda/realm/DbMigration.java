@@ -8,10 +8,9 @@ import io.realm.RealmSchema;
 
 /**
  * Created by isanechek on 29.08.16.
- *
+ * <p>
  * Это хрень нужна для того чтобы мигрировать с одной версии обьекта на другой.
  * Ну вдруг там поля поменялись или еще чего.
- *
  */
 
 public class DbMigration implements RealmMigration {

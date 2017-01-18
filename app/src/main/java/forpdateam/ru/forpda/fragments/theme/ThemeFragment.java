@@ -62,6 +62,11 @@ public abstract class ThemeFragment extends TabFragment {
     //Указывают на произведенное действие: переход назад, обновление, обычный переход по ссылке
     protected final static int BACK_ACTION = 0, REFRESH_ACTION = 1, NORMAL_ACTION = 2;
     protected final static String JS_INTERFACE = "ITheme";
+    protected static final int PICK_IMAGE = 1228;
+    private final static String reportWarningText = "Вам не нужно указывать здесь тему и сообщение, модератор автоматически получит эту информацию.\n\n" +
+            "Пожалуйста, используйте эту возможность форума только для жалоб о некорректном сообщении!\n" +
+            "Для связи с модератором используйте личные сообщения.";
+    protected final ColorFilter colorFilter = new PorterDuffColorFilter(Color.argb(80, 255, 255, 255), PorterDuff.Mode.DST_IN);
     protected int action = NORMAL_ACTION;
     protected SwipeRefreshLayout refreshLayout;
     protected ThemePage pageData;
@@ -71,12 +76,9 @@ public abstract class ThemeFragment extends TabFragment {
     protected TabLayout tabLayout;
     //Тег для вьюхи поиска. Чтобы создавались кнопки и т.д, только при вызове поиска, а не при каждом создании меню.
     protected int searchViewTag = 0;
-    protected final ColorFilter colorFilter = new PorterDuffColorFilter(Color.argb(80, 255, 255, 255), PorterDuff.Mode.DST_IN);
     protected MessagePanel messagePanel;
     protected AttachmentsPopup attachmentsPopup;
     protected Subscriber<List<AttachmentItem>> attachmentSubscriber = new Subscriber<>();
-    protected static final int PICK_IMAGE = 1228;
-
 
     protected abstract void addShowingView();
 
@@ -187,6 +189,13 @@ public abstract class ThemeFragment extends TabFragment {
         messagePanel.hidePopupWindows();
     }
 
+
+    /*
+    *
+    * LOADING POST FUNCTIONS
+    *
+    * */
+
     @Override
     public boolean onBackPressed() {
         if (messagePanel.onBackPressed()) return true;
@@ -203,13 +212,6 @@ public abstract class ThemeFragment extends TabFragment {
         }
         return false;
     }
-
-
-    /*
-    *
-    * LOADING POST FUNCTIONS
-    *
-    * */
 
     @Override
     public void loadData() {
@@ -305,6 +307,13 @@ public abstract class ThemeFragment extends TabFragment {
         }
     }
 
+
+    /*
+    *
+    * EDIT POST FUNCTIONS
+    *
+    * */
+
     private void addSearchOnPageItem(Menu menu) {
         toolbar.inflateMenu(R.menu.theme_search_menu);
         SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
@@ -356,13 +365,6 @@ public abstract class ThemeFragment extends TabFragment {
         });
     }
 
-
-    /*
-    *
-    * EDIT POST FUNCTIONS
-    *
-    * */
-
     private EditPostForm createEditPostForm() {
         EditPostForm form = new EditPostForm();
         form.setForumId(pageData.getForumId());
@@ -401,7 +403,6 @@ public abstract class ThemeFragment extends TabFragment {
         startActivityForResult(FilePickHelper.pickImage(PICK_IMAGE), PICK_IMAGE);
     }
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -414,16 +415,9 @@ public abstract class ThemeFragment extends TabFragment {
         }
     }
 
-
     public void uploadFiles(List<RequestFile> files) {
         attachmentsPopup.preUploadFiles(files);
         attachmentSubscriber.subscribe(Api.EditPost().uploadFiles(56965580, files), items -> attachmentsPopup.onUploadFiles(items), new ArrayList<>(), null);
-    }
-
-    public void removeFiles() {
-        attachmentsPopup.preDeleteFiles();
-        List<AttachmentItem> selectedFiles = attachmentsPopup.getSelected();
-        attachmentSubscriber.subscribe(Api.EditPost().deleteFiles(56965580, selectedFiles), item -> attachmentsPopup.onDeleteFiles(item), selectedFiles, null);
     }
 
 
@@ -433,6 +427,12 @@ public abstract class ThemeFragment extends TabFragment {
     * Post functions
     *
     * */
+
+    public void removeFiles() {
+        attachmentsPopup.preDeleteFiles();
+        List<AttachmentItem> selectedFiles = attachmentsPopup.getSelected();
+        attachmentSubscriber.subscribe(Api.EditPost().deleteFiles(56965580, selectedFiles), item -> attachmentsPopup.onDeleteFiles(item), selectedFiles, null);
+    }
 
     public ThemePost getPostById(int postId) {
         for (ThemePost post : pageData.getPosts())
@@ -449,55 +449,45 @@ public abstract class ThemeFragment extends TabFragment {
         loadData();
     }
 
-
     public void firstPage() {
         if (pageData.getCurrentPage() <= 0) return;
         jumpToPage(0);
     }
-
 
     public void prevPage() {
         if (pageData.getCurrentPage() <= 1) return;
         jumpToPage((pageData.getCurrentPage() - 2) * pageData.getPostsOnPageCount());
     }
 
-
     public void nextPage() {
         if (pageData.getCurrentPage() == pageData.getAllPagesCount()) return;
         jumpToPage(pageData.getCurrentPage() * pageData.getPostsOnPageCount());
     }
-
 
     public void lastPage() {
         if (pageData.getCurrentPage() == pageData.getAllPagesCount()) return;
         jumpToPage((pageData.getAllPagesCount() - 1) * pageData.getPostsOnPageCount());
     }
 
-
     public void selectPage() {
         ThemeDialogsHelper.selectPage(this, pageData);
     }
-
 
     public void showUserMenu(final String postId) {
         ThemeDialogsHelper.showUserMenu(this, getPostById(Integer.parseInt(postId)));
     }
 
-
     public void showReputationMenu(final String postId) {
         ThemeDialogsHelper.showReputationMenu(this, getPostById(Integer.parseInt(postId)));
     }
-
 
     public void showPostMenu(final String postId) {
         ThemeDialogsHelper.showPostMenu(this, getPostById(Integer.parseInt(postId)));
     }
 
-
     public void reportPost(final String postId) {
         reportPost(getPostById(Integer.parseInt(postId)));
     }
-
 
     public void insertNick(final String postId) {
         insertNick(getPostById(Integer.parseInt(postId)));
@@ -516,7 +506,6 @@ public abstract class ThemeFragment extends TabFragment {
         String insert = String.format(Locale.getDefault(), "[quote name=\"%s\" date=\"%s\" post=%S]%s[/quote]", post.getNick(), post.getDate(), post.getId(), text);
         messagePanel.insertText(insert);
     }
-
 
     public void deletePost(final String postId) {
         deletePost(getPostById(Integer.parseInt(postId)));
@@ -560,10 +549,6 @@ public abstract class ThemeFragment extends TabFragment {
         setTabUrl(getTabUrl().replaceFirst("#[^&]*", "").replace("&mode=show", "").replace("&poll_open=true", "").concat("&poll_open=true"));
         loadData();
     }
-
-    private final static String reportWarningText = "Вам не нужно указывать здесь тему и сообщение, модератор автоматически получит эту информацию.\n\n" +
-            "Пожалуйста, используйте эту возможность форума только для жалоб о некорректном сообщении!\n" +
-            "Для связи с модератором используйте личные сообщения.";
 
     public void reportPost(ThemePost post) {
         if (App.getInstance().getPreferences().getBoolean("show_report_warning", true)) {

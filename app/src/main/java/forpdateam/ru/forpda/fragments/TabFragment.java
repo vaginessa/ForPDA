@@ -52,14 +52,14 @@ public class TabFragment extends RxFragment implements ITabFragment {
     protected ImageView toolbarBackground;
     protected CoordinatorLayout coordinatorLayout;
     protected FloatingActionButton fab;
+    protected TextView toolbarTitleView;
+    protected TextView toolbarSubitleView;
+    protected ImageView toolbarImageView;
     private int UID = 0;
     private String title = getDefaultTitle();
     private String subtitle;
     private String parentTag;
     private ImageView icNoNetwork;
-    protected TextView toolbarTitleView;
-    protected TextView toolbarSubitleView;
-    protected ImageView toolbarImageView;
 
     public TabFragment() {
         parentTag = TabManager.getActiveTag();
@@ -76,6 +76,13 @@ public class TabFragment extends RxFragment implements ITabFragment {
     @Override
     public String getTitle() {
         return title;
+    }
+
+    protected final void setTitle(String title) {
+        this.title = title;
+        getMainActivity().updateTabList();
+        //getTitleBar().setTitle(title);
+        toolbarTitleView.setText(title);
     }
 
     @Override
@@ -205,7 +212,6 @@ public class TabFragment extends RxFragment implements ITabFragment {
         inflater.inflate(res, (ViewGroup) view.findViewById(R.id.fragment_content), true);
     }
 
-
     protected void viewsReady() {
         if (Client.getInstance().getNetworkState()) {
             loadData();
@@ -230,7 +236,7 @@ public class TabFragment extends RxFragment implements ITabFragment {
     }
 
     private void updateNotifyDot() {
-        if (!App.getInstance().getPreferences().getBoolean("main.show_notify_dot", true)){
+        if (!App.getInstance().getPreferences().getBoolean("main.show_notify_dot", true)) {
             notifyDot.setVisibility(View.GONE);
             return;
         }
@@ -238,38 +244,6 @@ public class TabFragment extends RxFragment implements ITabFragment {
             notifyDot.setVisibility(View.VISIBLE);
         else
             notifyDot.setVisibility(View.GONE);
-    }
-
-    class Task extends AsyncTask {
-        Exception exception;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected Object doInBackground(Object[] objects) {
-            try {
-                Api.Auth().tryLogout();
-            } catch (Exception e) {
-                exception = e;
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Object o) {
-            if (exception != null) {
-                new AlertDialog.Builder(getMainActivity())
-                        .setMessage(exception.getMessage())
-                        .create()
-                        .show();
-            } else {
-                Toast.makeText(getContext(), "logout complete", Toast.LENGTH_LONG).show();
-                Api.Auth().doOnLogout();
-            }
-        }
     }
 
     protected void initFabBehavior() {
@@ -305,13 +279,6 @@ public class TabFragment extends RxFragment implements ITabFragment {
         return subtitle;
     }
 
-    protected final void setTitle(String title) {
-        this.title = title;
-        getMainActivity().updateTabList();
-        //getTitleBar().setTitle(title);
-        toolbarTitleView.setText(title);
-    }
-
     protected final void setSubtitle(String subtitle) {
         this.subtitle = subtitle;
         if (subtitle == null) {
@@ -322,7 +289,6 @@ public class TabFragment extends RxFragment implements ITabFragment {
         }
         //getTitleBar().setSubtitle(subtitle);
     }
-
 
     protected final View findViewById(@IdRes int id) {
         return view.findViewById(id);
@@ -364,22 +330,6 @@ public class TabFragment extends RxFragment implements ITabFragment {
         ErrorHandler.handle(this, throwable, listener);
     }
 
-    public class Subscriber<T> {
-        public Disposable subscribe(@NonNull Observable<T> observable, @NonNull Consumer<T> onNext, @NonNull T onErrorReturn) {
-            return subscribe(observable, onNext, onErrorReturn, null);
-        }
-
-        public Disposable subscribe(@NonNull Observable<T> observable, @NonNull Consumer<T> onNext, @NonNull T onErrorReturn, View.OnClickListener onErrorAction) {
-            return observable.onErrorReturn(throwable -> {
-                handleErrorRx(throwable, onErrorAction);
-                return onErrorReturn;
-            })
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(onNext, throwable -> handleErrorRx(throwable, onErrorAction));
-        }
-    }
-
     /* Experiment */
     public static class Builder<T extends TabFragment> {
         private T tClass;
@@ -405,6 +355,54 @@ public class TabFragment extends RxFragment implements ITabFragment {
         public T build() {
             tClass.setUID();
             return tClass;
+        }
+    }
+
+    class Task extends AsyncTask {
+        Exception exception;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Object doInBackground(Object[] objects) {
+            try {
+                Api.Auth().tryLogout();
+            } catch (Exception e) {
+                exception = e;
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            if (exception != null) {
+                new AlertDialog.Builder(getMainActivity())
+                        .setMessage(exception.getMessage())
+                        .create()
+                        .show();
+            } else {
+                Toast.makeText(getContext(), "logout complete", Toast.LENGTH_LONG).show();
+                Api.Auth().doOnLogout();
+            }
+        }
+    }
+
+    public class Subscriber<T> {
+        public Disposable subscribe(@NonNull Observable<T> observable, @NonNull Consumer<T> onNext, @NonNull T onErrorReturn) {
+            return subscribe(observable, onNext, onErrorReturn, null);
+        }
+
+        public Disposable subscribe(@NonNull Observable<T> observable, @NonNull Consumer<T> onNext, @NonNull T onErrorReturn, View.OnClickListener onErrorAction) {
+            return observable.onErrorReturn(throwable -> {
+                handleErrorRx(throwable, onErrorAction);
+                return onErrorReturn;
+            })
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(onNext, throwable -> handleErrorRx(throwable, onErrorAction));
         }
     }
 }

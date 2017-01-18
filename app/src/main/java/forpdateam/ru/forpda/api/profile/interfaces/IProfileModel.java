@@ -11,25 +11,47 @@ import java.util.ArrayList;
 public interface IProfileModel {
     String getAvatar();
 
+    void setAvatar(String arg);
+
     String getNick();
+
+    void setNick(String arg);
 
     String getStatus();
 
+    void setStatus(String arg);
+
     String getGroup();
+
+    void setGroup(String arg);
 
     String getRegDate();
 
+    void setRegDate(String arg);
+
     String getAlerts();
+
+    void setAlerts(String arg);
 
     String getOnlineDate();
 
+    void setOnlineDate(String arg);
+
     Spanned getSign();
+
+    void setSign(Spanned arg);
 
     String getGender();
 
+    void setGender(String arg);
+
     String getBirthDay();
 
+    void setBirthDay(String arg);
+
     String getUserTime();
+
+    void setUserTime(String arg);
 
     ArrayList<Pair<String, String>> getContacts();
 
@@ -37,59 +59,37 @@ public interface IProfileModel {
 
     Pair<String, String> getKarma();
 
+    void setKarma(Pair<String, String> arg);
+
     Pair<String, String> getSitePosts();
+
+    void setSitePosts(Pair<String, String> arg);
 
     Pair<String, String> getComments();
 
+    void setComments(Pair<String, String> arg);
+
     Pair<String, String> getReputation();
+
+    void setReputation(Pair<String, String> arg);
 
     Pair<String, String> getTopics();
 
+    void setTopics(Pair<String, String> arg);
+
     Pair<String, String> getPosts();
+
+    void setPosts(Pair<String, String> arg);
 
     String getNote();
 
+    void setNote(String arg);
+
     Spanned getAbout();
 
-    void setAvatar(String arg);
-
-    void setNick(String arg);
-
-    void setStatus(String arg);
-
-    void setGroup(String arg);
-
-    void setRegDate(String arg);
-
-    void setAlerts(String arg);
-
-    void setOnlineDate(String arg);
-
-    void setSign(Spanned arg);
-
-    void setGender(String arg);
-
-    void setBirthDay(String arg);
-
-    void setUserTime(String arg);
+    void setAbout(Spanned arg);
 
     void addContact(Pair<String, String> arg);
 
     void addDevice(Pair<String, String> arg);
-
-    void setKarma(Pair<String, String> arg);
-
-    void setSitePosts(Pair<String, String> arg);
-
-    void setComments(Pair<String, String> arg);
-
-    void setReputation(Pair<String, String> arg);
-
-    void setTopics(Pair<String, String> arg);
-
-    void setPosts(Pair<String, String> arg);
-
-    void setNote(String arg);
-
-    void setAbout(Spanned arg);
 }

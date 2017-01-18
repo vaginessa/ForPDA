@@ -49,6 +49,11 @@ public class QmsThemesFragment extends TabFragment {
             };
     private Subscriber<QmsThemes> mainSubscriber = new Subscriber<>();
 
+    public static String createTitle(String userNick) {
+        //return defaultTitle.concat(" с ").concat(userNick);
+        return userNick;
+    }
+
     @Override
     public String getDefaultTitle() {
         return defaultTitle;
@@ -150,11 +155,6 @@ public class QmsThemesFragment extends TabFragment {
         if (results.size() != 0 && results.last().getThemes().size() != 0) {
             adapter.addAll(results.last().getThemes());
         }
-    }
-
-    public static String createTitle(String userNick) {
-        //return defaultTitle.concat(" с ").concat(userNick);
-        return userNick;
     }
 
 }

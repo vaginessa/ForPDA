@@ -7,16 +7,17 @@ import io.realm.annotations.PrimaryKey;
  * Created by radiationx on 22.09.16.
  */
 
-public class FavItem extends RealmObject{
+public class FavItem extends RealmObject {
     @PrimaryKey
     private int favId;
     private int topicId, forumId, authorId, lastUserId, stParam, pages;
     private String trackType, info, infoColor, topicTitle, forumTitle, authorUserNick, lastUserNick, date, desc;
     private boolean pin = false, isNewMessages = false;
 
-    public FavItem(){}
+    public FavItem() {
+    }
 
-    public FavItem(FavItem item){
+    public FavItem(FavItem item) {
         favId = item.getFavId();
         topicId = item.getTopicId();
         forumId = item.getForumId();

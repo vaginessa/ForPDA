@@ -23,10 +23,6 @@ public class RequestFile {
         this.mimeType = mimeType;
     }
 
-    public void setRequestName(String requestName) {
-        this.requestName = requestName;
-    }
-
     public InputStream getFileStream() {
         return fileStream;
     }
@@ -41,5 +37,9 @@ public class RequestFile {
 
     public String getRequestName() {
         return requestName;
+    }
+
+    public void setRequestName(String requestName) {
+        this.requestName = requestName;
     }
 }

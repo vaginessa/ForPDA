@@ -15,9 +15,17 @@ public class QmsMessage implements IQmsChatItem {
         return whoseMessage;
     }
 
+    public void setWhoseMessage(boolean whoseMessage) {
+        this.whoseMessage = whoseMessage;
+    }
+
     @Override
     public String getId() {
         return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     @Override
@@ -25,9 +33,17 @@ public class QmsMessage implements IQmsChatItem {
         return readStatus;
     }
 
+    public void setReadStatus(String readStatus) {
+        this.readStatus = readStatus;
+    }
+
     @Override
     public String getTime() {
         return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 
     @Override
@@ -35,9 +51,17 @@ public class QmsMessage implements IQmsChatItem {
         return avatar;
     }
 
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
     @Override
     public String getContent() {
         return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
     @Override
@@ -50,35 +74,11 @@ public class QmsMessage implements IQmsChatItem {
         return date;
     }
 
-    public void setIsDate(boolean isDate) {
-        this.isDate = isDate;
-    }
-
     public void setDate(String date) {
         this.date = date;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public void setReadStatus(String readStatus) {
-        this.readStatus = readStatus;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
-    }
-
-    public void setWhoseMessage(boolean whoseMessage) {
-        this.whoseMessage = whoseMessage;
+    public void setIsDate(boolean isDate) {
+        this.isDate = isDate;
     }
 }

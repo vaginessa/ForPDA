@@ -20,10 +20,6 @@ public class CustomSwipeRefreshLayout extends SwipeRefreshLayout {
         super(context, attrs);
     }
 
-    public interface CanChildScrollUpCallback {
-        boolean canSwipeRefreshChildScrollUp();
-    }
-
     public void setCanChildScrollUpCallback(CanChildScrollUpCallback canChildScrollUpCallback) {
         mCanChildScrollUpCallback = canChildScrollUpCallback;
     }
@@ -34,5 +30,9 @@ public class CustomSwipeRefreshLayout extends SwipeRefreshLayout {
             return mCanChildScrollUpCallback.canSwipeRefreshChildScrollUp();
         }
         return super.canChildScrollUp();
+    }
+
+    public interface CanChildScrollUpCallback {
+        boolean canSwipeRefreshChildScrollUp();
     }
 }

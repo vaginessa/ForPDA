@@ -58,6 +58,37 @@ public class ProfileFragment extends TabFragment {
     private Subscriber<Boolean> saveNoteSubscriber = new Subscriber<>();
     private Subscriber<Bitmap> blurAvatarSubscriber = new Subscriber<>();
 
+    public static Bitmap centerCrop(final Bitmap src, int w, int h, float scaleFactor) {
+        final int srcWidth = (int) (src.getWidth() / scaleFactor);
+        final int srcHeight = (int) (src.getHeight() / scaleFactor);
+        w = (int) (w / scaleFactor);
+        h = (int) (h / scaleFactor);
+        if (w == srcWidth && h == srcHeight) {
+            return src;
+        }
+        final Matrix m = new Matrix();
+        final float scale = Math.max(
+                (float) w / srcWidth,
+                (float) h / srcHeight);
+        m.setScale(scale, scale);
+        final int srcCroppedW, srcCroppedH;
+        int srcX, srcY;
+        srcCroppedW = Math.round(w / scale);
+        srcCroppedH = Math.round(h / scale);
+        srcX = (int) (srcWidth * 0.5f - srcCroppedW / 2);
+        srcY = (int) (srcHeight * 0.5f - srcCroppedH / 2);
+        srcX = Math.max(Math.min(srcX, srcWidth - srcCroppedW), 0);
+        srcY = Math.max(Math.min(srcY, srcHeight - srcCroppedH), 0);
+
+        Bitmap overlay = Bitmap.createBitmap(srcCroppedW, srcCroppedH, Bitmap.Config.ARGB_8888);
+        overlay.eraseColor(Color.WHITE);
+        Canvas canvas = new Canvas(overlay);
+        canvas.translate(-srcX / scaleFactor, -srcY / scaleFactor);
+        canvas.scale(1 / scaleFactor, 1 / scaleFactor);
+        canvas.drawBitmap(src, 0, 0, new Paint(Paint.FILTER_BITMAP_FLAG));
+        return overlay;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -127,7 +158,6 @@ public class ProfileFragment extends TabFragment {
     public void saveNote() {
         saveNoteSubscriber.subscribe(Api.Profile().saveNoteRx(noteText.getText().toString()), this::onNoteSave, false, v -> saveNote());
     }
-
 
     private void onNoteSave(boolean b) {
         Toast.makeText(getContext(), b ? "Запись сохранена" : "Возникла ошибка, запись не сохранена", Toast.LENGTH_SHORT).show();
@@ -283,6 +313,24 @@ public class ProfileFragment extends TabFragment {
         Log.d("kek", "full time " + (System.currentTimeMillis() - time));
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    private void blur(Bitmap bkg) {
+        float scaleFactor = 3;
+        int radius = 4;
+        Observable<Bitmap> observable = Observable.fromCallable(() -> {
+            Bitmap overlay = centerCrop(bkg, toolbarBackground.getWidth(), toolbarBackground.getHeight(), scaleFactor);
+            BlurUtil.fastBlur(overlay, radius, true);
+            return overlay;
+        });
+        blurAvatarSubscriber.subscribe(observable, bitmap -> {
+            AlphaAnimation animation1 = new AlphaAnimation(0, 1);
+            animation1.setDuration(500);
+            animation1.setFillAfter(true);
+            toolbarBackground.setBackground(new BitmapDrawable(getResources(), bitmap));
+            toolbarBackground.startAnimation(animation1);
+        }, bkg);
+    }
+
     class CountItem extends LinearLayout {
         public CountItem(Context context) {
             super(context);
@@ -337,54 +385,5 @@ public class ProfileFragment extends TabFragment {
         public void setText(String text) {
             ((TextView) findViewById(R.id.item_text)).setText(text);
         }
-    }
-
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-    private void blur(Bitmap bkg) {
-        float scaleFactor = 3;
-        int radius = 4;
-        Observable<Bitmap> observable = Observable.fromCallable(() -> {
-            Bitmap overlay = centerCrop(bkg, toolbarBackground.getWidth(), toolbarBackground.getHeight(), scaleFactor);
-            BlurUtil.fastBlur(overlay, radius, true);
-            return overlay;
-        });
-        blurAvatarSubscriber.subscribe(observable, bitmap -> {
-            AlphaAnimation animation1 = new AlphaAnimation(0, 1);
-            animation1.setDuration(500);
-            animation1.setFillAfter(true);
-            toolbarBackground.setBackground(new BitmapDrawable(getResources(), bitmap));
-            toolbarBackground.startAnimation(animation1);
-        }, bkg);
-    }
-
-    public static Bitmap centerCrop(final Bitmap src, int w, int h, float scaleFactor) {
-        final int srcWidth = (int) (src.getWidth() / scaleFactor);
-        final int srcHeight = (int) (src.getHeight() / scaleFactor);
-        w = (int) (w / scaleFactor);
-        h = (int) (h / scaleFactor);
-        if (w == srcWidth && h == srcHeight) {
-            return src;
-        }
-        final Matrix m = new Matrix();
-        final float scale = Math.max(
-                (float) w / srcWidth,
-                (float) h / srcHeight);
-        m.setScale(scale, scale);
-        final int srcCroppedW, srcCroppedH;
-        int srcX, srcY;
-        srcCroppedW = Math.round(w / scale);
-        srcCroppedH = Math.round(h / scale);
-        srcX = (int) (srcWidth * 0.5f - srcCroppedW / 2);
-        srcY = (int) (srcHeight * 0.5f - srcCroppedH / 2);
-        srcX = Math.max(Math.min(srcX, srcWidth - srcCroppedW), 0);
-        srcY = Math.max(Math.min(srcY, srcHeight - srcCroppedH), 0);
-
-        Bitmap overlay = Bitmap.createBitmap(srcCroppedW, srcCroppedH, Bitmap.Config.ARGB_8888);
-        overlay.eraseColor(Color.WHITE);
-        Canvas canvas = new Canvas(overlay);
-        canvas.translate(-srcX / scaleFactor, -srcY / scaleFactor);
-        canvas.scale(1 / scaleFactor, 1 / scaleFactor);
-        canvas.drawBitmap(src, 0, 0, new Paint(Paint.FILTER_BITMAP_FLAG));
-        return overlay;
     }
 }

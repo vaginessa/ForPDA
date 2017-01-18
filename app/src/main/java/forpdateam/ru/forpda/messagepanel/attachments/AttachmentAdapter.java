@@ -30,9 +30,9 @@ import forpdateam.ru.forpda.api.theme.editpost.models.AttachmentItem;
  */
 
 public class AttachmentAdapter extends RecyclerView.Adapter<AttachmentAdapter.ViewHolder> {
+    private final ColorFilter colorFilter = new PorterDuffColorFilter(Color.argb(80, 0, 0, 0), PorterDuff.Mode.DST_OUT);
     private List<AttachmentItem> items = new ArrayList<>();
     private List<AttachmentItem> selected = new ArrayList<>();
-    private final ColorFilter colorFilter = new PorterDuffColorFilter(Color.argb(80, 0, 0, 0), PorterDuff.Mode.DST_OUT);
     private OnDataChangeListener onDataChangeListener;
     private AttachmentAdapter.OnItemClickListener itemClickListener;
     private OnSelectedListener onSelectedListener;
@@ -60,7 +60,7 @@ public class AttachmentAdapter extends RecyclerView.Adapter<AttachmentAdapter.Vi
             onDataChangeListener.onChange(items.size());
     }
 
-    public void clear(){
+    public void clear() {
         items.clear();
         unSelectItems();
         if (onDataChangeListener != null) {
@@ -85,7 +85,7 @@ public class AttachmentAdapter extends RecyclerView.Adapter<AttachmentAdapter.Vi
     public void unSelectItems() {
         for (AttachmentItem item : selected) {
             if (item != null) {
-                if(item.isSelected()) item.toggle();
+                if (item.isSelected()) item.toggle();
                 notifyItemChanged(items.indexOf(item));
             }
         }
@@ -175,6 +175,34 @@ public class AttachmentAdapter extends RecyclerView.Adapter<AttachmentAdapter.Vi
         this.onDataChangeListener = onDataChangeListener;
     }
 
+    private void updateChecked(ViewHolder holder, int position) {
+        AttachmentItem item = items.get(position);
+        if (item.isSelected()) {
+            if (!selected.contains(item)) {
+                selected.add(item);
+            }
+        } else {
+            selected.remove(item);
+        }
+        holder.radioButton.setChecked(item.isSelected());
+        if (item.getLoadState() == AttachmentItem.STATE_NOT_LOADED) {
+            holder.overlay.setVisibility(View.VISIBLE);
+            holder.overlay.setBackgroundColor(Color.argb(item.isSelected() ? 96 : 48, 255, 0, 0));
+        } else {
+            holder.overlay.setBackgroundColor(Color.argb(48, 0, 0, 0));
+            holder.overlay.setVisibility(item.isSelected() ? View.VISIBLE : View.GONE);
+        }
+        if (onSelectedListener != null)
+            onSelectedListener.onSelected(item, position, selected.size());
+    }
+
+    public boolean containNotLoaded() {
+        for (AttachmentItem item : selected) {
+            if (item.getLoadState() != AttachmentItem.STATE_LOADED)
+                return true;
+        }
+        return false;
+    }
 
     public interface OnItemClickListener {
         void onItemClick(AttachmentItem item);
@@ -184,6 +212,7 @@ public class AttachmentAdapter extends RecyclerView.Adapter<AttachmentAdapter.Vi
         void onReloadClick(AttachmentItem item);
     }
 
+
     public interface OnSelectedListener {
         void onSelected(AttachmentItem item, int index, int selected);
     }
@@ -192,15 +221,14 @@ public class AttachmentAdapter extends RecyclerView.Adapter<AttachmentAdapter.Vi
         void onChange(int count);
     }
 
-
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        public LinearLayout description;
         ImageView imageView;
         RadioButton radioButton;
         View overlay;
         ProgressBar progressBar;
         ImageButton reload;
         TextView name, attributes;
-        public LinearLayout description;
 
         public ViewHolder(View view) {
             super(view);
@@ -245,34 +273,5 @@ public class AttachmentAdapter extends RecyclerView.Adapter<AttachmentAdapter.Vi
                 itemClickListener.onItemClick(item);
             }
         }
-    }
-
-    private void updateChecked(ViewHolder holder, int position) {
-        AttachmentItem item = items.get(position);
-        if (item.isSelected()) {
-            if (!selected.contains(item)) {
-                selected.add(item);
-            }
-        } else {
-            selected.remove(item);
-        }
-        holder.radioButton.setChecked(item.isSelected());
-        if (item.getLoadState() == AttachmentItem.STATE_NOT_LOADED) {
-            holder.overlay.setVisibility(View.VISIBLE);
-            holder.overlay.setBackgroundColor(Color.argb(item.isSelected() ? 96 : 48, 255, 0, 0));
-        } else {
-            holder.overlay.setBackgroundColor(Color.argb(48, 0, 0, 0));
-            holder.overlay.setVisibility(item.isSelected() ? View.VISIBLE : View.GONE);
-        }
-        if (onSelectedListener != null)
-            onSelectedListener.onSelected(item, position, selected.size());
-    }
-
-    public boolean containNotLoaded() {
-        for (AttachmentItem item : selected) {
-            if (item.getLoadState() != AttachmentItem.STATE_LOADED)
-                return true;
-        }
-        return false;
     }
 }

@@ -46,6 +46,16 @@ public class QmsNewThemeFragment extends TabFragment {
 
     private Subscriber<String> newThemeSubscriber = new Subscriber<>();
     private Subscriber<String[]> searchUserSubscriber = new Subscriber<>();
+    private TextWatcher textWatcher = new SimpleTextWatcher() {
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            if ((userId != 0 || userNick.length() > 0) && titleField.getText().length() > 0 && messField.getText().length() > 0) {
+                sendItem.setVisible(true);
+            } else {
+                sendItem.setVisible(false);
+            }
+        }
+    };
 
     @Override
     public String getDefaultTitle() {
@@ -111,17 +121,6 @@ public class QmsNewThemeFragment extends TabFragment {
 
         return view;
     }
-
-    private TextWatcher textWatcher = new SimpleTextWatcher() {
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if ((userId != 0 || userNick.length() > 0) && titleField.getText().length() > 0 && messField.getText().length() > 0) {
-                sendItem.setVisible(true);
-            } else {
-                sendItem.setVisible(false);
-            }
-        }
-    };
 
     private void showMessagePanel() {
         messagePanel.setVisibility(View.VISIBLE);

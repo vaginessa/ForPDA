@@ -141,6 +141,14 @@ public class MenuDrawer {
         }
     }
 
+    private MenuItem getByClass(Class className) {
+        for (MenuItem item : menuItems) {
+            if (item.gettClass() == className)
+                return item;
+        }
+        return null;
+    }
+
     public class MenuAdapter extends ArrayAdapter<MenuItem> {
         private final static int item_res = R.layout.drawer_menu_item;
         private final LayoutInflater inflater;
@@ -202,14 +210,6 @@ public class MenuDrawer {
             public TextView count;
             public ImageView icon;
         }
-    }
-
-    private MenuItem getByClass(Class className) {
-        for (MenuItem item : menuItems) {
-            if (item.gettClass() == className)
-                return item;
-        }
-        return null;
     }
 
     private class MenuItem<T extends TabFragment> {

@@ -31,6 +31,45 @@ public class CustomBottomSheetDialog extends AppCompatDialog {
     private boolean mCanceledOnTouchOutside = true;
     private boolean mCanceledOnTouchOutsideSet;
     private int peekHeight = BottomSheetBehavior.PEEK_HEIGHT_AUTO;
+    private FrameLayout bottomSheet;
+
+    /*public BottomSheetBehavior<FrameLayout> getBehavior() {
+        return mBehavior;
+    }*/
+    private BottomSheetBehavior.BottomSheetCallback mBottomSheetCallback = new BottomSheetBehavior.BottomSheetCallback() {
+        @Override
+        public void onStateChanged(@NonNull View bottomSheet, /*@BottomSheetBehavior.State*/ int newState) {
+            if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                cancel();
+            }
+        }
+
+        @Override
+        public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+            if (slideOffset > 0)
+                bottomSheet.setPadding(0, (int) (slideOffset * App.getStatusBarHeight()), 0, 0);
+        }
+    };
+
+    public CustomBottomSheetDialog(Context context) {
+        super(context, getThemeResId(context, 0));
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
+    }
+
+    private static int getThemeResId(Context context, int themeId) {
+        if (themeId == 0) {
+            // If the provided theme is 0, then retrieve the dialogTheme from our theme
+            TypedValue outValue = new TypedValue();
+            if (context.getTheme().resolveAttribute(android.support.design.R.attr.bottomSheetDialogTheme, outValue, true)) {
+                themeId = outValue.resourceId;
+            } else {
+                // bottomSheetDialogTheme is not provided; we default to our light theme
+                themeId = R.style.AppTheme_BottomSheetDialog;
+            }
+        }
+        return themeId;
+        //return R.style.AppTheme_BottomSheetDialog;
+    }
 
     public void setPeekHeight(int peekHeight) {
         this.peekHeight = peekHeight;
@@ -38,21 +77,11 @@ public class CustomBottomSheetDialog extends AppCompatDialog {
             mBehavior.setPeekHeight(peekHeight);
     }
 
-    /*public BottomSheetBehavior<FrameLayout> getBehavior() {
-        return mBehavior;
-    }*/
-
-    public CustomBottomSheetDialog(Context context) {
-        super(context, getThemeResId(context, 0));
-        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
     }
-
 
     @Override
     public void setContentView(View view) {
@@ -84,8 +113,6 @@ public class CustomBottomSheetDialog extends AppCompatDialog {
         mCanceledOnTouchOutside = cancel;
         mCanceledOnTouchOutsideSet = true;
     }
-
-    private FrameLayout bottomSheet;
 
     private View wrapInBottomSheet(int layoutResId, View view, ViewGroup.LayoutParams params) {
         final CoordinatorLayout coordinator = (CoordinatorLayout) View.inflate(getContext(), R.layout.test_bottom_sheet_dialog, null);
@@ -151,34 +178,4 @@ public class CustomBottomSheetDialog extends AppCompatDialog {
         }
         return mCanceledOnTouchOutside;
     }
-
-    private static int getThemeResId(Context context, int themeId) {
-        if (themeId == 0) {
-            // If the provided theme is 0, then retrieve the dialogTheme from our theme
-            TypedValue outValue = new TypedValue();
-            if (context.getTheme().resolveAttribute(android.support.design.R.attr.bottomSheetDialogTheme, outValue, true)) {
-                themeId = outValue.resourceId;
-            } else {
-                // bottomSheetDialogTheme is not provided; we default to our light theme
-                themeId = R.style.AppTheme_BottomSheetDialog;
-            }
-        }
-        return themeId;
-        //return R.style.AppTheme_BottomSheetDialog;
-    }
-
-    private BottomSheetBehavior.BottomSheetCallback mBottomSheetCallback = new BottomSheetBehavior.BottomSheetCallback() {
-        @Override
-        public void onStateChanged(@NonNull View bottomSheet, /*@BottomSheetBehavior.State*/ int newState) {
-            if (newState == BottomSheetBehavior.STATE_HIDDEN) {
-                cancel();
-            }
-        }
-
-        @Override
-        public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-            if (slideOffset > 0)
-                bottomSheet.setPadding(0, (int) (slideOffset * App.getStatusBarHeight()), 0, 0);
-        }
-    };
 }
